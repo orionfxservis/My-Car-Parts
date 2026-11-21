@@ -215,7 +215,7 @@ export function ToolsCatalog({
                         Unit List Price
                       </span>
                       <span className="font-mono tabular-nums text-base font-bold text-slate-950">
-                        ${tool.price.toLocaleString('en-US')}
+                        Rs {tool.price.toLocaleString('en-US')}
                       </span>
                     </div>
 

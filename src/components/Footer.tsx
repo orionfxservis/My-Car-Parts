@@ -208,7 +208,7 @@ export function Footer() {
               className="inline-flex items-center bg-[#F7F6F2] rounded-xl px-3.5 py-2 border-2 border-slate-300/80 hover:border-amber-500 transition-colors"
             >
               <img
-                src="/assets/aistudio/my-car-parts-logo_b8556d44.png"
+                src="./assets/aistudio/my-car-parts-logo_b8556d44.png"
                 alt="My Car Parts"
                 className="h-14 sm:h-16 w-auto object-contain"
               />

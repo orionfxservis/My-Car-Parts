@@ -113,7 +113,7 @@ export function QuoteDrawer({
                     </h3>
                     {items.length > 0 && (
                       <span className="text-xs font-mono tabular-nums text-amber-400">
-                        Est. ${estimatedTotal.toLocaleString('en-US')}
+                        Est. Rs {estimatedTotal.toLocaleString('en-US')}
                       </span>
                     )}
                   </div>
@@ -135,7 +135,7 @@ export function QuoteDrawer({
                               {item.name}
                             </p>
                             <p className="text-[11px] font-mono tabular-nums text-slate-400 mt-0.5">
-                              {item.sku} · ${item.price.toLocaleString('en-US')}
+                              {item.sku} · Rs {item.price.toLocaleString('en-US')}
                             </p>
                           </div>
                           <button

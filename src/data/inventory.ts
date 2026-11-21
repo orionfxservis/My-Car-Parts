@@ -1,3 +1,10 @@
+import heroCarsToolsImg from '../assets/images/hero_cars_tools_1795209688349.jpg';
+import heroGeneratorSystemsImg from '../assets/images/hero_generator_systems_1795209690119.jpg';
+import heroHeavyMachineryImg from '../assets/images/hero_heavy_machinery_1795209690346.jpg';
+import toolCarDiagnosticImg from '../assets/images/tool_car_diagnostic_1795209690132.jpg';
+import toolGeneratorLoadbankImg from '../assets/images/tool_generator_loadbank_1795209690561.jpg';
+import toolHydraulicPullerImg from '../assets/images/tool_hydraulic_puller_1795209689799.jpg';
+
 export type ToolCategory = 'cars' | 'generators' | 'machinery';
 
 export interface ToolSpec {
@@ -50,7 +57,7 @@ export const CATEGORY_CARDS: CategoryCardData[] = [
     subtitle: 'Diagnostics, Torque & Chassis Calibration',
     description:
       'Precision chrome-vanadium hand tools, digital angle torque wrenches, and multi-protocol OBD-II telemetry analyzers engineered for modern combustion, hybrid, and EV drivetrains.',
-    image: '/src/assets/images/hero_cars_tools_1795209688349.jpg',
+    image: heroCarsToolsImg,
     highlights: [
       { label: 'Torque Range', value: '10 – 450 Nm' },
       { label: 'Calibration Accuracy', value: '±1.5% CW / CCW' },
@@ -65,7 +72,7 @@ export const CATEGORY_CARDS: CategoryCardData[] = [
     subtitle: 'Load Banks, AVR Testing & Switchgear',
     description:
       'Industrial load bank analyzers, 1000V insulated switchgear maintenance chests, and digital governor calibration instruments built for prime and standby diesel generator fleets.',
-    image: '/src/assets/images/hero_generator_systems_1795209690119.jpg',
+    image: heroGeneratorSystemsImg,
     highlights: [
       { label: 'Load Capacity', value: '50 kW – 1,200 kW' },
       { label: 'Insulation Rating', value: 'IEC 60900 1000V' },
@@ -80,7 +87,7 @@ export const CATEGORY_CARDS: CategoryCardData[] = [
     subtitle: 'Hydraulic Pullers & High-Torque Multipliers',
     description:
       'High-tonnage hydraulic track pin extractors, planetary torque multipliers, and excavator cylinder rebuild kits forged from heat-treated alloy steel for quarry and construction fleets.',
-    image: '/src/assets/images/hero_heavy_machinery_1795209690346.jpg',
+    image: heroHeavyMachineryImg,
     highlights: [
       { label: 'Extraction Force', value: 'Up to 100 Ton' },
       { label: 'Torque Output', value: '4,200 – 8,500 Nm' },
@@ -98,7 +105,7 @@ export const HERO_INVENTORY_SLIDES: HeroSlideItem[] = [
     sku: 'VK-AT-420',
     title: 'Digital Angle Torque & Cr-V Master Kit',
     specSummary: '10–340 Nm · ±1.5% NIST Traceable',
-    image: '/src/assets/images/hero_cars_tools_1795209688349.jpg',
+    image: heroCarsToolsImg,
   },
   {
     id: 'slide-2',
@@ -107,7 +114,7 @@ export const HERO_INVENTORY_SLIDES: HeroSlideItem[] = [
     sku: 'VK-GN-880',
     title: 'Prime Power Switchgear & Diagnostic Bay',
     specSummary: '400V–1000V · Three-Phase Telemetry',
-    image: '/src/assets/images/hero_generator_systems_1795209690119.jpg',
+    image: heroGeneratorSystemsImg,
   },
   {
     id: 'slide-3',
@@ -116,7 +123,7 @@ export const HERO_INVENTORY_SLIDES: HeroSlideItem[] = [
     sku: 'VK-HM-910',
     title: 'Planetary Hydraulic Torque Multiplier 4200 Nm',
     specSummary: '700 Bar · Excavator & Crusher Flanges',
-    image: '/src/assets/images/hero_heavy_machinery_1795209690346.jpg',
+    image: heroHeavyMachineryImg,
   },
   {
     id: 'slide-4',
@@ -125,7 +132,7 @@ export const HERO_INVENTORY_SLIDES: HeroSlideItem[] = [
     sku: 'VK-AT-905',
     title: 'Rugged IP67 Bi-Directional Telemetry Tablet',
     specSummary: '4-Ch Oscilloscope · CAN-FD & DoIP',
-    image: '/src/assets/images/tool_car_diagnostic_1795209690132.jpg',
+    image: toolCarDiagnosticImg,
   },
   {
     id: 'slide-5',
@@ -134,7 +141,7 @@ export const HERO_INVENTORY_SLIDES: HeroSlideItem[] = [
     sku: 'VK-GN-500',
     title: 'LB-5000 Portable 50 kW Load Bank Analyzer',
     specSummary: 'L1/L2/L3 Balanced Step Load · 415V',
-    image: '/src/assets/images/tool_generator_loadbank_1795209690561.jpg',
+    image: toolGeneratorLoadbankImg,
   },
   {
     id: 'slide-6',
@@ -143,7 +150,7 @@ export const HERO_INVENTORY_SLIDES: HeroSlideItem[] = [
     sku: 'VK-HM-50T',
     title: '50-Ton Hydraulic Track Pin & Gear Puller',
     specSummary: 'Black-Oxide Alloy Jaw · Brass Gauge',
-    image: '/src/assets/images/tool_hydraulic_puller_1795209689799.jpg',
+    image: toolHydraulicPullerImg,
   },
 ];
 
@@ -154,7 +161,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     name: 'Digital Angle Torque & Cr-V Master Kit',
     category: 'cars',
     categoryLabel: 'Car Parts',
-    image: '/src/assets/images/hero_cars_tools_1795209688349.jpg',
+    image: heroCarsToolsImg,
     shortDesc:
       '72-tooth sealed ratchet head with backlit OLED angle readout and forged 6-point metric impact & chrome sockets.',
     fullDesc:
@@ -180,7 +187,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     name: 'Rugged IP67 Bi-Directional Telemetry Tablet',
     category: 'cars',
     categoryLabel: 'Car Parts',
-    image: '/src/assets/images/tool_car_diagnostic_1795209690132.jpg',
+    image: toolCarDiagnosticImg,
     shortDesc:
       'Workshop-hardened vehicle diagnostic terminal with 4-channel oscilloscope, injector coding, and live CAN bus graphing.',
     fullDesc:
@@ -206,7 +213,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     name: 'Machined Brake & Rotor Runout Alignment Kit',
     category: 'cars',
     categoryLabel: 'Car Parts',
-    image: '/src/assets/images/hero_cars_tools_1795209688349.jpg',
+    image: heroCarsToolsImg,
     shortDesc:
       'Precision dial indicator assembly with magnetic articulated arm and digital vernier micrometer for brake and driveline service.',
     fullDesc:
@@ -232,7 +239,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     name: 'LB-5000 Portable 50 kW Load Bank Analyzer',
     category: 'generators',
     categoryLabel: 'Generators Parts',
-    image: '/src/assets/images/tool_generator_loadbank_1795209690561.jpg',
+    image: toolGeneratorLoadbankImg,
     shortDesc:
       'Three-phase resistive load bank with true-RMS digital metering, braided copper Camlock leads, and thermal runaway protection.',
     fullDesc:
@@ -258,7 +265,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     name: '1000V Insulated Switchgear & AVR Service Chest',
     category: 'generators',
     categoryLabel: 'Generators Parts',
-    image: '/src/assets/images/hero_generator_systems_1795209690119.jpg',
+    image: heroGeneratorSystemsImg,
     shortDesc:
       '46-piece IEC 60900 certified insulated tool trolley with phase-rotation meter and true-RMS AC/DC clamp multimeter.',
     fullDesc:
@@ -284,7 +291,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     name: 'Governor Speed & Frequency Calibration Kit',
     category: 'generators',
     categoryLabel: 'Generators Parts',
-    image: '/src/assets/images/tool_generator_loadbank_1795209690561.jpg',
+    image: toolGeneratorLoadbankImg,
     shortDesc:
       'Optical/magnetic pickup tachometer paired with harmonic clamp meter for precision diesel governor droop adjustment.',
     fullDesc:
@@ -310,7 +317,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     name: '50-Ton Hydraulic Track Pin & Gear Puller',
     category: 'machinery',
     categoryLabel: 'Heavy Machinery Equipments',
-    image: '/src/assets/images/tool_hydraulic_puller_1795209689799.jpg',
+    image: toolHydraulicPullerImg,
     shortDesc:
       'Forged black-oxide 3-jaw hydraulic puller with 700-bar dual-speed hand pump and glycerin-filled brass pressure gauge.',
     fullDesc:
@@ -336,7 +343,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     name: 'Planetary Hydraulic Torque Multiplier 4200 Nm',
     category: 'machinery',
     categoryLabel: 'Heavy Machinery Equipments',
-    image: '/src/assets/images/hero_heavy_machinery_1795209690346.jpg',
+    image: heroHeavyMachineryImg,
     shortDesc:
       'Continuous-rotation hydraulic torque head with reaction arm for excavator boom cylinders, slew rings, and structural bolts.',
     fullDesc:
@@ -362,7 +369,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     name: 'Excavator Cylinder Seal & Gland Wrench System',
     category: 'machinery',
     categoryLabel: 'Heavy Machinery Equipments',
-    image: '/src/assets/images/hero_heavy_machinery_1795209690346.jpg',
+    image: heroHeavyMachineryImg,
     shortDesc:
       'Adjustable heavy-duty pin spanner & hydraulic bench fixture kit for tearing down 80 mm to 260 mm hydraulic rams.',
     fullDesc:

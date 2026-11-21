@@ -66,7 +66,7 @@ export function ToolDetailModal({
                 <div>
                   <span className="block text-xs text-slate-400">List Price (Ex-Works)</span>
                   <span className="font-mono tabular-nums text-2xl font-bold text-white">
-                    ${tool.price.toLocaleString('en-US')}
+                    Rs {tool.price.toLocaleString('en-US')}
                   </span>
                 </div>
                 <span
