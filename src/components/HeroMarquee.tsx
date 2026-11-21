@@ -51,21 +51,22 @@ export function HeroMarquee({
           {/* Left Side: Company Proposition & CTAs */}
           <div className="lg:col-span-5 flex flex-col justify-center py-2 lg:py-6">
             <p className="text-xs sm:text-sm font-medium text-amber-400 tracking-wide mb-3">
-              ISO 9001:2015 Certified · Automotive, Power &amp; Fleet Tooling · Global Dispatch
+              Auto Parts Supplier · Generator Spare Parts · Heavy Machinery Parts
             </p>
             <h1
-              className="text-slate-50 font-bold tracking-tight leading-[1.06]"
+              className="text-slate-50 font-bold tracking-tight leading-[1.08]"
               style={{
-                fontSize: 'clamp(2.25rem, 3.6vw, 3.75rem)',
+                fontSize: 'clamp(1.95rem, 3.05vw, 3.15rem)',
                 textWrap: 'balance',
               }}
             >
-              Precision tools for cars, heavy generators, and heavy machinery.
+              Automotive, Generator &amp; Heavy Machinery Spare Parts
             </h1>
             <p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl">
-              My Car Parts supplies workshop-calibrated torque systems, diesel load bank
-              analyzers, and 700-bar hydraulic extraction equipment built to keep critical
-              fleets and power plants running without downtime.
+              My Car Parts is your destination for automotive spare parts, diesel generator
+              components, and heavy machinery parts. We help vehicle owners, workshops, equipment
+              operators, and industrial businesses find the right parts for their maintenance and
+              repair requirements.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -276,6 +277,61 @@ export function HeroMarquee({
                 </div>
               </button>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Introductory Buyer Overview Below Main Banner */}
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 mt-10 sm:mt-12 pt-8 sm:pt-10 border-t border-slate-800/80">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+          <div className="lg:col-span-8">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-50 tracking-tight">
+              Trusted Supply for Automotive Workshops, Power Generation &amp; Construction Fleets
+            </h2>
+            <p className="mt-2.5 text-sm sm:text-base text-slate-300 leading-relaxed">
+              As a dedicated auto parts supplier and industrial distributor,{' '}
+              <span className="text-white font-medium">My Car Parts</span> supplies dependable car
+              spare parts—including engine spare parts, brake pads and filters, and car suspension
+              parts for Toyota, Honda, and Suzuki vehicles—alongside diesel generator parts,
+              alternator and governor assemblies, and generator maintenance parts for Perkins and
+              Cummins units. We also support civil contractors and quarry operators with heavy
+              machinery spare parts, hydraulic spare parts, and service equipment for Caterpillar,
+              Komatsu, and JCB machines. Whether you manage a commercial repair bay, a standby
+              power room, or an active earthmoving fleet, you can inspect product specs below, add
+              items to your quote list, or enquire directly via Live Support,{' '}
+              <a
+                href="mailto:sales@mycarparts.pk"
+                className="text-amber-400 hover:text-amber-300 underline underline-offset-2"
+              >
+                sales@mycarparts.pk
+              </a>
+              , or WhatsApp{' '}
+              <a
+                href="https://wa.me/923002183149"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-amber-400 hover:text-amber-300 underline underline-offset-2 whitespace-nowrap"
+              >
+                +92 300 2183149
+              </a>{' '}
+              for immediate availability and pricing.
+            </p>
+          </div>
+
+          <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 text-xs sm:text-sm">
+            <div className="bg-[#1B212C] border border-slate-800 rounded-lg px-4 py-3">
+              <p className="font-semibold text-amber-400">1. Browse Online Stock</p>
+              <p className="text-slate-300 mt-0.5">
+                Filter car parts, generator parts, and machinery equipment by category or SKU.
+              </p>
+            </div>
+            <div className="bg-[#1B212C] border border-slate-800 rounded-lg px-4 py-3">
+              <p className="font-semibold text-amber-400">2. Request Availability</p>
+              <p className="text-slate-300 mt-0.5">
+                Add required items to your quote basket or share your vehicle, genset, or machine
+                model number.
+              </p>
+            </div>
           </div>
         </div>
       </div>

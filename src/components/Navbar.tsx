@@ -54,21 +54,21 @@ export function Navbar({ quoteCount, onSelectCategory, onOpenQuote }: NavbarProp
             onClick={() => handleCategoryClick('cars')}
             className="hover:text-white underline-offset-4 hover:underline transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
-            Car Parts
+            Car Spare Parts
           </button>
           <button
             type="button"
             onClick={() => handleCategoryClick('generators')}
             className="hover:text-white underline-offset-4 hover:underline transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
-            Generators Parts
+            Generator Spare Parts
           </button>
           <button
             type="button"
             onClick={() => handleCategoryClick('machinery')}
             className="hover:text-white underline-offset-4 hover:underline transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
-            Heavy Machinery Equipments
+            Heavy Machinery Parts
           </button>
           <button
             type="button"
@@ -119,21 +119,21 @@ export function Navbar({ quoteCount, onSelectCategory, onOpenQuote }: NavbarProp
             onClick={() => handleCategoryClick('cars')}
             className="w-full text-left px-3 py-3 text-sm font-medium text-slate-200 hover:bg-slate-800/70 rounded-md transition-colors cursor-pointer"
           >
-            Car Parts
+            Car Spare Parts
           </button>
           <button
             type="button"
             onClick={() => handleCategoryClick('generators')}
             className="w-full text-left px-3 py-3 text-sm font-medium text-slate-200 hover:bg-slate-800/70 rounded-md transition-colors cursor-pointer"
           >
-            Generators Parts
+            Generator Spare Parts
           </button>
           <button
             type="button"
             onClick={() => handleCategoryClick('machinery')}
             className="w-full text-left px-3 py-3 text-sm font-medium text-slate-200 hover:bg-slate-800/70 rounded-md transition-colors cursor-pointer"
           >
-            Heavy Machinery Equipments
+            Heavy Machinery Parts
           </button>
           <button
             type="button"

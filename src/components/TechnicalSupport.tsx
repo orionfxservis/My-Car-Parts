@@ -10,7 +10,7 @@ export function TechnicalSupport({ onOpenChatWithTopic }: TechnicalSupportProps)
   const [activeGuideId, setActiveGuideId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [category, setCategory] = useState('Car Parts');
+  const [category, setCategory] = useState('Car Spare Parts');
   const [serial, setSerial] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -212,11 +212,9 @@ export function TechnicalSupport({ onOpenChatWithTopic }: TechnicalSupportProps)
                       onChange={(e) => setCategory(e.target.value)}
                       className="w-full px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-md text-slate-950 focus:outline-none focus:border-amber-500"
                     >
-                      <option value="Car Parts">Car Parts</option>
-                      <option value="Generators Parts">Generators Parts</option>
-                      <option value="Heavy Machinery Equipments">
-                        Heavy Machinery Equipments
-                      </option>
+                      <option value="Car Spare Parts">Car Spare Parts</option>
+                      <option value="Generator Spare Parts">Generator Spare Parts</option>
+                      <option value="Heavy Machinery Parts">Heavy Machinery Parts</option>
                     </select>
                   </div>
                   <div>

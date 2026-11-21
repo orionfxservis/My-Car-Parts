@@ -82,7 +82,7 @@ export function CategoryTriad({ activeCategory, onSelectCategory }: CategoryTria
                   </div>
                 </div>
 
-                <div className="px-6 pb-6 pt-2">
+                <div className="px-6 pb-6 pt-2 space-y-2.5">
                   <button
                     type="button"
                     onClick={() => onSelectCategory(card.id)}
@@ -91,6 +91,18 @@ export function CategoryTriad({ activeCategory, onSelectCategory }: CategoryTria
                     <span>{card.ctaLabel}</span>
                     <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                   </button>
+                  <a
+                    href={
+                      card.id === 'cars'
+                        ? './pages/car-parts.html'
+                        : card.id === 'generators'
+                          ? './pages/generator-parts.html'
+                          : './pages/heavy-machinery-parts.html'
+                    }
+                    className="block text-center text-xs font-semibold text-slate-700 hover:text-amber-700 underline underline-offset-4 transition-colors"
+                  >
+                    Open {card.title} Page →
+                  </a>
                 </div>
               </article>
             );

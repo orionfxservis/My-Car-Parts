@@ -582,6 +582,27 @@ export function Footer() {
         <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-500">
           <p>© 2026 My Car Parts Ltd. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-4">
+            <a
+              href="./pages/car-parts.html"
+              className="hover:text-amber-400 transition-colors"
+            >
+              Car Spare Parts
+            </a>
+            <span aria-hidden="true">·</span>
+            <a
+              href="./pages/generator-parts.html"
+              className="hover:text-amber-400 transition-colors"
+            >
+              Generator Spare Parts
+            </a>
+            <span aria-hidden="true">·</span>
+            <a
+              href="./pages/heavy-machinery-parts.html"
+              className="hover:text-amber-400 transition-colors"
+            >
+              Heavy Machinery Parts
+            </a>
+            <span aria-hidden="true">·</span>
             <button
               type="button"
               onClick={() => setActiveDoc('privacy')}

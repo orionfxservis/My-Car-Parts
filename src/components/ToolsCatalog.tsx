@@ -12,10 +12,10 @@ interface ToolsCatalogProps {
 }
 
 const FILTER_OPTIONS: { id: ToolCategory | 'all'; label: string }[] = [
-  { id: 'all', label: 'All Tools' },
-  { id: 'cars', label: 'Car Parts' },
-  { id: 'generators', label: 'Generators Parts' },
-  { id: 'machinery', label: 'Heavy Machinery Equipments' },
+  { id: 'all', label: 'All Parts' },
+  { id: 'cars', label: 'Car Spare Parts' },
+  { id: 'generators', label: 'Generator Spare Parts' },
+  { id: 'machinery', label: 'Heavy Machinery Parts' },
 ];
 
 export function ToolsCatalog({
@@ -37,7 +37,9 @@ export function ToolsCatalog({
         tool.name.toLowerCase().includes(query) ||
         tool.sku.toLowerCase().includes(query) ||
         tool.shortDesc.toLowerCase().includes(query) ||
-        tool.categoryLabel.toLowerCase().includes(query)
+        tool.fullDesc.toLowerCase().includes(query) ||
+        tool.categoryLabel.toLowerCase().includes(query) ||
+        tool.applications.some((app) => app.toLowerCase().includes(query))
       );
     });
   }, [activeCategory, searchQuery]);
@@ -54,15 +56,16 @@ export function ToolsCatalog({
               className="text-2xl sm:text-3xl font-bold text-slate-50 tracking-tight"
               style={{ textWrap: 'balance' }}
             >
-              Equipment Inventory &amp; Tool Specifications
+              Automotive, Generator &amp; Heavy Machinery Catalog
             </h2>
             <p className="mt-2 text-sm sm:text-base text-slate-400 max-w-2xl">
-              Inspect technical tolerances, operating ranges, and unit pricing across our
-              active catalog. Add tools to a quote request or open full engineering sheets.
+              Review technical specifications, brand compatibility, and unit pricing across our
+              active inventory. Add items to your quote list or contact us for OEM part numbers
+              and bulk availability.
             </p>
           </div>
 
-          <div className="relative w-full lg:w-72 shrink-0">
+          <div className="relative w-full lg:w-80 shrink-0">
             <Search
               className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
               aria-hidden="true"
@@ -71,8 +74,8 @@ export function ToolsCatalog({
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search SKU or tool name..."
-              aria-label="Search tools by SKU or name"
+              placeholder="Search SKU, part, or make (Toyota, Perkins, CAT)..."
+              aria-label="Search parts and equipment by SKU, name, or brand"
               className="w-full pl-10 pr-4 py-2.5 text-sm bg-[#1A202B] border border-slate-700/90 rounded-md text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-amber-500 transition-colors"
             />
           </div>

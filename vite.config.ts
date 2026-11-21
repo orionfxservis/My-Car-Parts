@@ -7,6 +7,16 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     base: './',
+    build: {
+      rollupOptions: {
+        input: {
+          main: path.resolve(__dirname, 'index.html'),
+          carParts: path.resolve(__dirname, 'pages/car-parts.html'),
+          generatorParts: path.resolve(__dirname, 'pages/generator-parts.html'),
+          heavyMachineryParts: path.resolve(__dirname, 'pages/heavy-machinery-parts.html'),
+        },
+      },
+    },
     plugins: [
       react(),
       tailwindcss(),
