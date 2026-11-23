@@ -14,15 +14,21 @@ import { Navbar } from './components/Navbar';
 import { QuoteDrawer } from './components/QuoteDrawer';
 import { TechnicalSupport } from './components/TechnicalSupport';
 import { ToolDetailModal } from './components/ToolDetailModal';
-import { ToolsCatalog } from './components/ToolsCatalog';
 import { HeroSlideItem, TOOL_INVENTORY, ToolCategory, ToolItem } from './data/inventory';
 
 const COOKIE_STORAGE_KEY = 'my_car_parts_cookie_consent';
+const QUOTE_STORAGE_KEY = 'my_car_parts_quote_ids';
 
 export default function App() {
-  const [activeCategory, setActiveCategory] = useState<ToolCategory | 'all'>('all');
   const [selectedTool, setSelectedTool] = useState<ToolItem | null>(null);
-  const [quoteIds, setQuoteIds] = useState<string[]>([]);
+  const [quoteIds, setQuoteIds] = useState<string[]>(() => {
+    try {
+      const saved = window.localStorage.getItem(QUOTE_STORAGE_KEY);
+      return saved ? (JSON.parse(saved) as string[]) : [];
+    } catch {
+      return [];
+    }
+  });
   const [quoteDrawerOpen, setQuoteDrawerOpen] = useState(false);
   const [chatExternalPrompt, setChatExternalPrompt] = useState<string | null>(null);
   const [cookieBannerVisible, setCookieBannerVisible] = useState<boolean>(() => {
@@ -33,16 +39,30 @@ export default function App() {
     }
   });
 
+  const saveQuoteIds = useCallback((updater: (prev: string[]) => string[]) => {
+    setQuoteIds((prev) => {
+      const next = updater(prev);
+      try {
+        window.localStorage.setItem(QUOTE_STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // Ignore storage errors
+      }
+      return next;
+    });
+  }, []);
+
   const quoteItems = useMemo(
     () => TOOL_INVENTORY.filter((item) => quoteIds.includes(item.id)),
     [quoteIds],
   );
 
-  const handleSelectCategoryAndScroll = useCallback((category: ToolCategory) => {
-    setActiveCategory(category);
-    const el = document.getElementById('tools-catalog');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const handleNavigateCategory = useCallback((category: ToolCategory) => {
+    if (category === 'cars') {
+      window.location.href = './pages/car-parts.html';
+    } else if (category === 'generators') {
+      window.location.href = './pages/generator-parts.html';
+    } else {
+      window.location.href = './pages/heavy-machinery-parts.html';
     }
   }, []);
 
@@ -67,19 +87,25 @@ export default function App() {
     }
   }, []);
 
-  const handleToggleQuote = useCallback((tool: ToolItem) => {
-    setQuoteIds((prev) =>
-      prev.includes(tool.id) ? prev.filter((id) => id !== tool.id) : [...prev, tool.id],
-    );
-  }, []);
+  const handleToggleQuote = useCallback(
+    (tool: ToolItem) => {
+      saveQuoteIds((prev) =>
+        prev.includes(tool.id) ? prev.filter((id) => id !== tool.id) : [...prev, tool.id],
+      );
+    },
+    [saveQuoteIds],
+  );
 
-  const handleRemoveQuoteItem = useCallback((id: string) => {
-    setQuoteIds((prev) => prev.filter((item) => item !== id));
-  }, []);
+  const handleRemoveQuoteItem = useCallback(
+    (id: string) => {
+      saveQuoteIds((prev) => prev.filter((item) => item !== id));
+    },
+    [saveQuoteIds],
+  );
 
   const handleClearQuote = useCallback(() => {
-    setQuoteIds([]);
-  }, []);
+    saveQuoteIds(() => []);
+  }, [saveQuoteIds]);
 
   const handleConsumePrompt = useCallback(() => {
     setChatExternalPrompt(null);
@@ -98,7 +124,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-[#0D1015] text-slate-100">
       <Navbar
         quoteCount={quoteItems.length}
-        onSelectCategory={handleSelectCategoryAndScroll}
+        onSelectCategory={handleNavigateCategory}
         onOpenQuote={() => setQuoteDrawerOpen(true)}
       />
 
@@ -109,18 +135,7 @@ export default function App() {
           onOpenSupport={handleOpenSupport}
         />
 
-        <CategoryTriad
-          activeCategory={activeCategory}
-          onSelectCategory={handleSelectCategoryAndScroll}
-        />
-
-        <ToolsCatalog
-          activeCategory={activeCategory}
-          onChangeCategory={setActiveCategory}
-          quoteIds={quoteIds}
-          onToggleQuote={handleToggleQuote}
-          onInspectTool={setSelectedTool}
-        />
+        <CategoryTriad />
 
         <CompanySection />
 

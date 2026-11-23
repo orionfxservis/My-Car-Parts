@@ -168,12 +168,18 @@ const MODAL_DOCS: Record<
   },
 };
 
-export function Footer() {
+interface FooterProps {
+  basePath?: string;
+  compact?: boolean;
+}
+
+export function Footer({ basePath = '.', compact = false }: FooterProps) {
   const [activeDoc, setActiveDoc] = useState<ModalDocType>(null);
   const [newsletterOpen, setNewsletterOpen] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterError, setNewsletterError] = useState('');
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+  const isSubpage = basePath !== '.';
 
   const handleNewsletterSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -186,6 +192,10 @@ export function Footer() {
   };
 
   const scrollToSection = (id: string) => {
+    if (isSubpage) {
+      window.location.href = `${basePath}/index.html#${id}`;
+      return;
+    }
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -194,21 +204,28 @@ export function Footer() {
 
   return (
     <footer className="bg-[#111318] text-slate-300 border-t border-slate-800/90">
-      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-12 sm:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800/80">
+      <div
+        className={`w-full px-4 sm:px-6 lg:px-10 xl:px-12 ${
+          compact ? 'py-6' : 'py-12 sm:py-16'
+        }`}
+      >
+        {!compact && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800/80">
           {/* Column 1: Brand & Socials */}
           <div className="lg:col-span-3 space-y-4">
             <a
-              href="#top"
+              href={isSubpage ? `${basePath}/index.html` : '#top'}
               onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (!isSubpage) {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               aria-label="My Car Parts Home"
               className="inline-flex items-center bg-[#F7F6F2] rounded-xl px-3.5 py-2 border-2 border-slate-300/80 hover:border-amber-500 transition-colors"
             >
               <img
-                src="./assets/aistudio/my-car-parts-logo_b8556d44.png"
+                src={`${basePath}/assets/aistudio/my-car-parts-logo_b8556d44.png`}
                 alt="My Car Parts"
                 className="h-14 sm:h-16 w-auto object-contain"
               />
@@ -577,27 +594,35 @@ export function Footer() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Bottom Copyright & Policy Links */}
-        <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2026 My Car Parts Ltd. All rights reserved.</p>
+        <div
+          className={`${
+            compact ? '' : 'pt-6 '
+          }flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-500`}
+        >
+          <p>
+            © 2026 My Car Parts Ltd. All rights reserved.{' '}
+            <span className="text-slate-400">· Designed &amp; Developed by Orion Fx.</span>
+          </p>
           <div className="flex flex-wrap items-center gap-4">
             <a
-              href="./pages/car-parts.html"
+              href={`${basePath}/pages/car-parts.html`}
               className="hover:text-amber-400 transition-colors"
             >
               Car Spare Parts
             </a>
             <span aria-hidden="true">·</span>
             <a
-              href="./pages/generator-parts.html"
+              href={`${basePath}/pages/generator-parts.html`}
               className="hover:text-amber-400 transition-colors"
             >
-              Generator Spare Parts
+              Industrial Generator Spare Parts
             </a>
             <span aria-hidden="true">·</span>
             <a
-              href="./pages/heavy-machinery-parts.html"
+              href={`${basePath}/pages/heavy-machinery-parts.html`}
               className="hover:text-amber-400 transition-colors"
             >
               Heavy Machinery Parts

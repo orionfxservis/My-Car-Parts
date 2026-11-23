@@ -213,7 +213,9 @@ export function TechnicalSupport({ onOpenChatWithTopic }: TechnicalSupportProps)
                       className="w-full px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-md text-slate-950 focus:outline-none focus:border-amber-500"
                     >
                       <option value="Car Spare Parts">Car Spare Parts</option>
-                      <option value="Generator Spare Parts">Generator Spare Parts</option>
+                      <option value="Industrial Generator Spare Parts">
+                        Industrial Generator Spare Parts
+                      </option>
                       <option value="Heavy Machinery Parts">Heavy Machinery Parts</option>
                     </select>
                   </div>

@@ -20,29 +20,6 @@ export function CompanySection() {
     },
   ];
 
-  const metrics = [
-    {
-      value: '18,400+',
-      label: 'Calibrated Tools Shipped Annually',
-      context: 'Across automotive & quarry fleets',
-    },
-    {
-      value: '±1.0%',
-      label: 'Factory Calibration Tolerance',
-      context: 'ISO/IEC 17025 metrology lab',
-    },
-    {
-      value: '42',
-      label: 'Authorized Calibration Depots',
-      context: 'North America, Europe & MENA',
-    },
-    {
-      value: '24 hr',
-      label: 'Emergency Replacement SLA',
-      context: 'For contracted fleet operators',
-    },
-  ];
-
   return (
     <section
       id="company"
@@ -87,24 +64,6 @@ export function CompanySection() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Adjacent Quantitative Proof Cards (Pearl White) */}
-        <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {metrics.map((metric) => (
-            <div
-              key={metric.label}
-              className="bg-[#F7F6F2] text-slate-950 border-2 border-slate-300/80 hover:border-amber-500 transition-all duration-200 hover:-translate-y-0.5 rounded-xl p-5 sm:p-6"
-            >
-              <p className="font-mono tabular-nums text-2xl sm:text-3xl font-bold text-slate-950">
-                {metric.value}
-              </p>
-              <p className="mt-1.5 text-xs sm:text-sm font-semibold text-slate-900">
-                {metric.label}
-              </p>
-              <p className="mt-1 text-xs text-slate-700">{metric.context}</p>
-            </div>
-          ))}
         </div>
       </div>
     </section>

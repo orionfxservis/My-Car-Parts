@@ -68,7 +68,7 @@ export const CATEGORY_CARDS: CategoryCardData[] = [
   {
     id: 'generators',
     indexLabel: '02. Power Generation Parts',
-    title: 'Generator Spare Parts',
+    title: 'Industrial Generator Spare Parts',
     subtitle: 'Diesel Engine, Alternator & Maintenance Parts',
     description:
       'Dependable diesel generator parts, generator engine parts, alternator spare parts, AVR controllers, and generator accessories built for prime and standby sets—supporting routine generator maintenance parts and commissioning for Perkins and Cummins power units.',
@@ -78,7 +78,7 @@ export const CATEGORY_CARDS: CategoryCardData[] = [
       { label: 'Supported Sets', value: 'Perkins · Cummins · Standby' },
       { label: 'Load Testing', value: '50 kW – 1,200 kW · 50/60 Hz' },
     ],
-    ctaLabel: 'Explore Generator Spare Parts',
+    ctaLabel: 'Explore Industrial Generator Spare Parts',
   },
   {
     id: 'machinery',
@@ -87,7 +87,7 @@ export const CATEGORY_CARDS: CategoryCardData[] = [
     subtitle: 'Excavator, Hydraulic & Industrial Components',
     description:
       'Heavy machinery spare parts, excavator spare parts, hydraulic spare parts, and industrial equipment components engineered for demanding sites—supporting routine overhauls on Caterpillar, Komatsu, and JCB construction machinery with high-tonnage extraction tooling.',
-    image: heroHeavyMachineryImg,
+    image: './assets/aistudio/image_11c6e947.png',
     highlights: [
       { label: 'Core Parts', value: 'Hydraulics, Seals & Undercarriage' },
       { label: 'Fleet Coverage', value: 'Caterpillar · Komatsu · JCB' },
@@ -110,7 +110,7 @@ export const HERO_INVENTORY_SLIDES: HeroSlideItem[] = [
   {
     id: 'slide-2',
     toolId: 'vk-gen-station',
-    categoryLabel: 'Generator Spare Parts',
+    categoryLabel: 'Industrial Generator Spare Parts',
     sku: 'VK-GN-880',
     title: 'Prime Power Switchgear & Diagnostic Bay',
     specSummary: '400V–1000V · Three-Phase Telemetry',
@@ -137,7 +137,7 @@ export const HERO_INVENTORY_SLIDES: HeroSlideItem[] = [
   {
     id: 'slide-5',
     toolId: 'vk-gen-loadbank',
-    categoryLabel: 'Generator Spare Parts',
+    categoryLabel: 'Industrial Generator Spare Parts',
     sku: 'VK-GN-500',
     title: 'LB-5000 Portable 50 kW Load Bank Analyzer',
     specSummary: 'L1/L2/L3 Balanced Step Load · 415V',
@@ -238,7 +238,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     sku: 'VK-GN-500',
     name: 'LB-5000 Portable 50 kW Load Bank Analyzer',
     category: 'generators',
-    categoryLabel: 'Generator Spare Parts',
+    categoryLabel: 'Industrial Generator Spare Parts',
     image: toolGeneratorLoadbankImg,
     shortDesc:
       'Three-phase resistive load bank with true-RMS digital metering, braided copper Camlock leads, and thermal runaway protection.',
@@ -264,7 +264,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     sku: 'VK-GN-880',
     name: '1000V Insulated Switchgear & AVR Service Chest',
     category: 'generators',
-    categoryLabel: 'Generator Spare Parts',
+    categoryLabel: 'Industrial Generator Spare Parts',
     image: heroGeneratorSystemsImg,
     shortDesc:
       '46-piece IEC 60900 certified insulated tool trolley with phase-rotation meter and true-RMS AC/DC clamp multimeter.',
@@ -290,7 +290,7 @@ export const TOOL_INVENTORY: ToolItem[] = [
     sku: 'VK-GN-310',
     name: 'Governor Speed & Frequency Calibration Kit',
     category: 'generators',
-    categoryLabel: 'Generator Spare Parts',
+    categoryLabel: 'Industrial Generator Spare Parts',
     image: toolGeneratorLoadbankImg,
     shortDesc:
       'Optical/magnetic pickup tachometer paired with harmonic clamp meter for precision diesel governor droop adjustment.',
@@ -403,7 +403,7 @@ export const TECHNICAL_GUIDES = [
   {
     id: 'guide-loadbank',
     code: 'DOC-GEN-415V',
-    category: 'Generator Spare Parts',
+    category: 'Industrial Generator Spare Parts',
     title: 'Commercial Generator Step-Load & AVR Sizing',
     summary: 'Three-phase Camlock wiring diagrams, wet-stacking burn-off schedules, and 50/60 Hz governor tuning.',
     pages: '22 Pages · Technical Manual',

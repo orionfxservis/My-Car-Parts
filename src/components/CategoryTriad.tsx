@@ -1,13 +1,8 @@
 import { ArrowRight } from 'lucide-react';
-import { CATEGORY_CARDS, ToolCategory } from '../data/inventory';
+import { CATEGORY_CARDS } from '../data/inventory';
 import { SafeImage } from './SafeImage';
 
-interface CategoryTriadProps {
-  activeCategory: ToolCategory | 'all';
-  onSelectCategory: (category: ToolCategory) => void;
-}
-
-export function CategoryTriad({ activeCategory, onSelectCategory }: CategoryTriadProps) {
+export function CategoryTriad() {
   return (
     <section
       id="categories"
@@ -34,16 +29,19 @@ export function CategoryTriad({ activeCategory, onSelectCategory }: CategoryTria
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {CATEGORY_CARDS.map((card) => {
-            const isSelected = activeCategory === card.id;
+            const pageHref =
+              card.id === 'cars'
+                ? './pages/car-parts.html'
+                : card.id === 'generators'
+                  ? './pages/generator-parts.html'
+                  : './pages/heavy-machinery-parts.html';
             return (
               <article
                 key={card.id}
-                className={`group flex flex-col justify-between bg-[#F7F6F2] text-slate-950 rounded-xl border-2 transition-all duration-200 overflow-hidden hover:-translate-y-0.5 hover:border-amber-500 ${
-                  isSelected ? 'border-amber-500' : 'border-slate-300/80'
-                }`}
+                className="group flex flex-col justify-between bg-[#F7F6F2] text-slate-950 rounded-xl border-2 border-slate-300/80 transition-all duration-200 overflow-hidden hover:-translate-y-0.5 hover:border-amber-500"
               >
                 <div>
-                  <div className="aspect-[16/9] w-full overflow-hidden bg-slate-900 relative">
+                  <div className="aspect-[16/9] w-full overflow-hidden bg-white relative">
                     <SafeImage
                       src={card.image}
                       alt={card.title}
@@ -82,26 +80,13 @@ export function CategoryTriad({ activeCategory, onSelectCategory }: CategoryTria
                   </div>
                 </div>
 
-                <div className="px-6 pb-6 pt-2 space-y-2.5">
-                  <button
-                    type="button"
-                    onClick={() => onSelectCategory(card.id)}
-                    className="w-full inline-flex items-center justify-between px-4 py-2.5 text-sm font-semibold rounded-md bg-amber-500 hover:bg-amber-400 text-slate-950 transition-colors cursor-pointer whitespace-nowrap"
-                  >
-                    <span>{card.ctaLabel}</span>
-                    <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
-                  </button>
+                <div className="px-6 pb-6 pt-2">
                   <a
-                    href={
-                      card.id === 'cars'
-                        ? './pages/car-parts.html'
-                        : card.id === 'generators'
-                          ? './pages/generator-parts.html'
-                          : './pages/heavy-machinery-parts.html'
-                    }
-                    className="block text-center text-xs font-semibold text-slate-700 hover:text-amber-700 underline underline-offset-4 transition-colors"
+                    href={pageHref}
+                    className="w-full inline-flex items-center justify-between px-4 py-2.5 text-sm font-semibold rounded-md bg-amber-500 hover:bg-amber-400 text-slate-950 transition-colors whitespace-nowrap"
                   >
-                    Open {card.title} Page →
+                    <span>More Details</span>
+                    <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                   </a>
                 </div>
               </article>

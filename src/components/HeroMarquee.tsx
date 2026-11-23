@@ -51,22 +51,23 @@ export function HeroMarquee({
           {/* Left Side: Company Proposition & CTAs */}
           <div className="lg:col-span-5 flex flex-col justify-center py-2 lg:py-6">
             <p className="text-xs sm:text-sm font-medium text-amber-400 tracking-wide mb-3">
-              Auto Parts Supplier · Generator Spare Parts · Heavy Machinery Parts
+              Car Spare Parts Supplier · Industrial Generator Parts · Heavy Machinery Parts
             </p>
             <h1
               className="text-slate-50 font-bold tracking-tight leading-[1.08]"
               style={{
-                fontSize: 'clamp(1.95rem, 3.05vw, 3.15rem)',
+                fontSize: 'clamp(1.9rem, 2.9vw, 3rem)',
                 textWrap: 'balance',
               }}
             >
-              Automotive, Generator &amp; Heavy Machinery Spare Parts
+              Car Spare Parts, Industrial Generator Parts &amp; Heavy Machinery Components
             </h1>
             <p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl">
-              My Car Parts is your destination for automotive spare parts, diesel generator
-              components, and heavy machinery parts. We help vehicle owners, workshops, equipment
-              operators, and industrial businesses find the right parts for their maintenance and
-              repair requirements.
+              My Car Parts is your destination for quality Car Spare Parts, Industrial Generator
+              Spare Parts &amp; Heavy Machinery Parts. We help Vehicle Owners, Automotive
+              Workshops, Generator Maintenance Professionals, Equipment Operators &amp; Industrial
+              Businesses find the right components for repairs, servicing &amp; maintenance
+              requirements.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
