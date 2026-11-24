@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Mail, Menu, X } from 'lucide-react';
 import { ToolCategory } from '../data/inventory';
 
 interface NavbarProps {
   quoteCount: number;
   onSelectCategory?: (category: ToolCategory) => void;
   onOpenQuote: () => void;
+  onOpenEnquiry?: () => void;
   basePath?: string;
   activeCategory?: ToolCategory;
   centerTitle?: string;
@@ -15,6 +16,7 @@ interface NavbarProps {
 export function Navbar({
   quoteCount,
   onOpenQuote,
+  onOpenEnquiry,
   basePath = '.',
   activeCategory,
   centerTitle,
@@ -119,14 +121,34 @@ export function Navbar({
         )}
 
         {/* Zone 3: Single Primary Action + Mobile Menu Trigger */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {backToMainHref ? (
-            <a
-              href={backToMainHref}
-              className="px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap shrink-0"
-            >
-              Back to Main
-            </a>
+            <>
+              {onOpenEnquiry ? (
+                <button
+                  type="button"
+                  onClick={onOpenEnquiry}
+                  className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                >
+                  <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+                  <span>Enquiry</span>
+                </button>
+              ) : (
+                <a
+                  href="mailto:sales@mycarparts.pk"
+                  className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap shrink-0"
+                >
+                  <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+                  <span>Enquiry</span>
+                </a>
+              )}
+              <a
+                href={backToMainHref}
+                className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap shrink-0"
+              >
+                Back to Main
+              </a>
+            </>
           ) : (
             <>
               <button

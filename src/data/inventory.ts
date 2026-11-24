@@ -57,7 +57,7 @@ export const CATEGORY_CARDS: CategoryCardData[] = [
     subtitle: 'Engine, Brake, Filter & Suspension Components',
     description:
       'Quality car spare parts and automotive components stocked for workshops and fleet operators—covering engine spare parts, brake pads and filters, car suspension parts, and diagnostic torque tools suited for Toyota, Honda, Suzuki, and multi-brand passenger vehicles.',
-    image: heroCarsToolsImg,
+    image: './assets/aistudio/car_spare_parts_d3e21beb.jpeg',
     highlights: [
       { label: 'Core Parts', value: 'Engine, Brakes & Suspension' },
       { label: 'Popular Makes', value: 'Toyota · Honda · Suzuki' },
@@ -72,7 +72,7 @@ export const CATEGORY_CARDS: CategoryCardData[] = [
     subtitle: 'Diesel Engine, Alternator & Maintenance Parts',
     description:
       'Dependable diesel generator parts, generator engine parts, alternator spare parts, AVR controllers, and generator accessories built for prime and standby sets—supporting routine generator maintenance parts and commissioning for Perkins and Cummins power units.',
-    image: heroGeneratorSystemsImg,
+    image: './assets/aistudio/industrial_generator_parts_02_7dc8d853.jpg',
     highlights: [
       { label: 'Core Parts', value: 'Engine, Alternator & AVR' },
       { label: 'Supported Sets', value: 'Perkins · Cummins · Standby' },

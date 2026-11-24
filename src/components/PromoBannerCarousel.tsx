@@ -4,17 +4,18 @@ import { CAR_PROMO_BANNERS, CarPromoBanner } from '../data/carPartsCatalog';
 
 interface PromoBannerCarouselProps {
   theme?: 'light' | 'dark';
+  banners?: CarPromoBanner[];
 }
 
-export function PromoBannerCarousel({ theme = 'light' }: PromoBannerCarouselProps) {
+export function PromoBannerCarousel({
+  theme = 'light',
+  banners = CAR_PROMO_BANNERS,
+}: PromoBannerCarouselProps) {
   const [selectedBanner, setSelectedBanner] = useState<CarPromoBanner | null>(null);
   const [activeBannerIndex, setActiveBannerIndex] = useState(0);
   const bannerTrackRef = useRef<HTMLDivElement | null>(null);
 
-  const bannerSlides = useMemo(
-    () => [...CAR_PROMO_BANNERS, CAR_PROMO_BANNERS[0]],
-    [],
-  );
+  const bannerSlides = useMemo(() => [...banners, banners[0]], [banners]);
 
   const getBannerStepWidth = () => {
     const track = bannerTrackRef.current;
@@ -25,26 +26,29 @@ export function PromoBannerCarousel({ theme = 'light' }: PromoBannerCarouselProp
     return firstCard.getBoundingClientRect().width + gap;
   };
 
-  const scrollToBanner = useCallback((targetIndex: number) => {
-    const total = CAR_PROMO_BANNERS.length;
-    const normalized = ((targetIndex % total) + total) % total;
-    setActiveBannerIndex(normalized);
-    const track = bannerTrackRef.current;
-    if (!track) return;
-    const step = getBannerStepWidth();
-    if (step > 0) {
-      track.scrollTo({ left: normalized * step, behavior: 'smooth' });
-    }
-  }, []);
+  const scrollToBanner = useCallback(
+    (targetIndex: number) => {
+      const total = banners.length;
+      const normalized = ((targetIndex % total) + total) % total;
+      setActiveBannerIndex(normalized);
+      const track = bannerTrackRef.current;
+      if (!track) return;
+      const step = getBannerStepWidth();
+      if (step > 0) {
+        track.scrollTo({ left: normalized * step, behavior: 'smooth' });
+      }
+    },
+    [banners.length],
+  );
 
   const handleBannerScroll = useCallback(() => {
     const track = bannerTrackRef.current;
     if (!track) return;
     const step = getBannerStepWidth();
     if (step <= 0) return;
-    const idx = Math.round(track.scrollLeft / step) % CAR_PROMO_BANNERS.length;
+    const idx = Math.round(track.scrollLeft / step) % banners.length;
     setActiveBannerIndex(idx);
-  }, []);
+  }, [banners.length]);
 
   const isDark = theme === 'dark';
 
@@ -115,7 +119,7 @@ export function PromoBannerCarousel({ theme = 'light' }: PromoBannerCarouselProp
         role="tablist"
         aria-label="Select banner slide"
       >
-        {CAR_PROMO_BANNERS.map((banner, idx) => {
+        {banners.map((banner, idx) => {
           const isCurrent = activeBannerIndex === idx;
           return (
             <button

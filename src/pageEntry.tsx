@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { ToolCategory } from './data/inventory';
 import { CarPartsCatalogApp } from './pages/CarPartsCatalogApp';
-import { CategoryLandingApp } from './pages/CategoryLandingApp';
+import { GeneratorPartsCatalogApp } from './pages/GeneratorPartsCatalogApp';
+import { HeavyMachineryCatalogApp } from './pages/HeavyMachineryCatalogApp';
 
 function resolveCategory(): ToolCategory {
   const fromBody = document.body.dataset.category;
@@ -22,8 +23,10 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     {category === 'cars' ? (
       <CarPartsCatalogApp />
+    ) : category === 'generators' ? (
+      <GeneratorPartsCatalogApp />
     ) : (
-      <CategoryLandingApp category={category} />
+      <HeavyMachineryCatalogApp />
     )}
   </StrictMode>,
 );

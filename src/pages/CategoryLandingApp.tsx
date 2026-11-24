@@ -335,36 +335,38 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
   );
 
   return (
-    <div id="top" className="min-h-screen flex flex-col bg-[#0D1015] text-slate-100">
+    <div id="top" className="min-h-screen flex flex-col bg-white text-slate-900">
       <Navbar
         basePath=".."
         activeCategory={category}
+        centerTitle={config.navTitle}
+        backToMainHref="../index.html"
         quoteCount={quoteItems.length}
         onSelectCategory={handleNavigateCategory}
         onOpenQuote={() => setQuoteDrawerOpen(true)}
       />
 
-      <main className="flex-1">
-        {/* Hero Band matching Homepage HeroMarquee */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#0D1015] via-[#131821] to-[#161C26] border-b border-slate-800/70 pt-8 pb-12 sm:pt-12 sm:pb-16">
-          <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
-            <nav aria-label="Breadcrumb" className="text-xs text-slate-400 mb-5">
-              <a href="../index.html" className="hover:text-amber-400 transition-colors">
+      <main className="flex-1 bg-white">
+        {/* Hero Band matching white inner-page theme */}
+        <section className="bg-white border-b border-slate-200 pt-8 pb-12 sm:pt-12 sm:pb-16">
+          <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
+            <nav aria-label="Breadcrumb" className="text-xs text-slate-500 mb-5">
+              <a href="../index.html" className="hover:text-[#0284C7] transition-colors">
                 Home
               </a>
               <span className="mx-2" aria-hidden="true">
                 /
               </span>
-              <span className="text-slate-200">{config.navTitle}</span>
+              <span className="text-slate-900 font-medium">{config.navTitle}</span>
             </nav>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
               <div className="lg:col-span-6">
-                <p className="text-xs sm:text-sm font-medium text-amber-400 tracking-wide mb-3">
+                <p className="text-xs sm:text-sm font-semibold text-amber-700 tracking-wide mb-3">
                   {config.eyebrow}
                 </p>
                 <h1
-                  className="text-slate-50 font-bold tracking-tight leading-[1.08]"
+                  className="text-slate-950 font-bold tracking-tight leading-[1.08]"
                   style={{
                     fontSize: 'clamp(1.95rem, 3.05vw, 3.1rem)',
                     textWrap: 'balance',
@@ -372,7 +374,7 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                 >
                   {config.h1}
                 </h1>
-                <p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl">
+                <p className="mt-5 text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl">
                   {config.lead}
                 </p>
 
@@ -388,7 +390,7 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                   </a>
                   <a
                     href={`mailto:sales@mycarparts.pk?subject=${encodeURIComponent(config.emailSubject)}`}
-                    className="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-slate-200 hover:text-white border border-slate-700 hover:border-amber-500 rounded-md transition-colors whitespace-nowrap"
+                    className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-md transition-colors whitespace-nowrap"
                   >
                     <Mail className="w-4 h-4" aria-hidden="true" />
                     <span>Email sales@mycarparts.pk</span>
@@ -397,7 +399,7 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
               </div>
 
               <div className="lg:col-span-6">
-                <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden border-2 border-slate-700/80 hover:border-amber-500 transition-colors duration-200 bg-white">
+                <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden border border-slate-200 hover:border-slate-300 shadow-xs transition-colors duration-200 bg-white">
                   <SafeImage
                     src={
                       divisionCard.image.startsWith('./assets/')
@@ -406,7 +408,9 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                     }
                     alt={config.h1}
                     fallbackLabel={config.navTitle}
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full ${
+                      category === 'generators' ? 'object-cover' : 'object-contain p-3'
+                    }`}
                   />
                 </div>
               </div>
@@ -414,17 +418,17 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
           </div>
         </section>
 
-        {/* Sub-Categories Section (Pearl White Cards) */}
-        <section className="bg-[#12161E] py-16 sm:py-20 border-b border-slate-800/70">
-          <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+        {/* Sub-Categories Section */}
+        <section className="bg-slate-50/70 py-16 sm:py-20 border-b border-slate-200">
+          <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
             <div className="max-w-2xl mb-10">
               <h2
-                className="text-2xl sm:text-3xl font-bold text-slate-50 tracking-tight"
+                className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight"
                 style={{ textWrap: 'balance' }}
               >
                 {config.subCategoriesTitle}
               </h2>
-              <p className="mt-2.5 text-sm sm:text-base text-slate-400 leading-relaxed">
+              <p className="mt-2.5 text-sm sm:text-base text-slate-600 leading-relaxed">
                 {config.subCategoriesDesc}
               </p>
             </div>
@@ -433,21 +437,21 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
               {config.subCategories.map((sub) => (
                 <article
                   key={sub.title}
-                  className="flex flex-col justify-between bg-[#F7F6F2] text-slate-950 rounded-xl border-2 border-slate-300/80 hover:border-amber-500 transition-all duration-200 hover:-translate-y-0.5 p-6"
+                  className="flex flex-col justify-between bg-white text-slate-900 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 p-6"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 text-xs mb-2">
                       <span className="font-semibold text-amber-700">{sub.badge}</span>
-                      <span className="font-mono text-slate-600">{sub.scope}</span>
+                      <span className="font-mono text-slate-500">{sub.scope}</span>
                     </div>
                     <h3 className="text-lg font-bold text-slate-950">{sub.title}</h3>
-                    <p className="mt-2.5 text-sm text-slate-800 leading-relaxed">
+                    <p className="mt-2.5 text-sm text-slate-600 leading-relaxed">
                       {sub.description}
                     </p>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-slate-300/80 flex items-center justify-between gap-3">
-                    <span className="font-mono text-xs text-slate-700">{sub.verifyLabel}</span>
+                  <div className="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between gap-3">
+                    <span className="font-mono text-xs text-slate-600">{sub.verifyLabel}</span>
                     <a
                       href={`mailto:sales@mycarparts.pk?subject=${encodeURIComponent(sub.subject)}`}
                       className="px-3.5 py-2 text-xs font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap"
@@ -461,25 +465,25 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
           </div>
         </section>
 
-        {/* Verified Inventory & Tooling Section (Pearl White Product Cards) */}
-        <section className="bg-[#0D1015] py-16 sm:py-20 border-b border-slate-800/70">
-          <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+        {/* Verified Inventory & Tooling Section */}
+        <section className="bg-white py-16 sm:py-20 border-b border-slate-200">
+          <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div className="max-w-2xl">
                 <h2
-                  className="text-2xl sm:text-3xl font-bold text-slate-50 tracking-tight"
+                  className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight"
                   style={{ textWrap: 'balance' }}
                 >
                   Featured {config.navTitle} Systems (Verified Specifications)
                 </h2>
-                <p className="mt-2.5 text-sm sm:text-base text-slate-400 leading-relaxed">
+                <p className="mt-2.5 text-sm sm:text-base text-slate-600 leading-relaxed">
                   Inspect verified tolerances, unit pricing in Rs, and add equipment directly to
                   your commercial quote basket.
                 </p>
               </div>
               <a
                 href="../index.html#categories"
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#0284C7] hover:text-sky-700 whitespace-nowrap"
               >
                 <span>Explore All Equipment Divisions</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -492,13 +496,13 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                 return (
                   <article
                     key={tool.id}
-                    className="flex flex-col justify-between bg-[#F7F6F2] text-slate-950 rounded-xl border-2 border-slate-300/80 hover:border-amber-500 transition-all duration-200 overflow-hidden hover:-translate-y-0.5"
+                    className="flex flex-col justify-between bg-white text-slate-900 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-200 overflow-hidden hover:-translate-y-0.5"
                   >
                     <div>
                       <button
                         type="button"
                         onClick={() => setSelectedTool(tool)}
-                        className="block w-full aspect-[4/3] overflow-hidden bg-slate-900 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                        className="block w-full aspect-[4/3] overflow-hidden bg-slate-100 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284C7]"
                       >
                         <SafeImage
                           src={tool.image}
@@ -509,7 +513,7 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                       </button>
 
                       <div className="p-6">
-                        <div className="flex items-center justify-between gap-2 text-xs text-slate-700 mb-2">
+                        <div className="flex items-center justify-between gap-2 text-xs text-slate-600 mb-2">
                           <span className="font-mono font-bold text-amber-700">{tool.sku}</span>
                           <span
                             className={`font-semibold ${
@@ -526,24 +530,24 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                           <button
                             type="button"
                             onClick={() => setSelectedTool(tool)}
-                            className="text-left hover:text-amber-700 transition-colors cursor-pointer"
+                            className="text-left hover:text-[#0284C7] transition-colors cursor-pointer"
                           >
                             {tool.name}
                           </button>
                         </h3>
 
-                        <p className="mt-2 text-sm text-slate-800 leading-relaxed">
+                        <p className="mt-2 text-sm text-slate-600 leading-relaxed">
                           {tool.shortDesc}
                         </p>
 
-                        <dl className="mt-4 pt-4 border-t border-slate-300/80 space-y-2">
+                        <dl className="mt-4 pt-4 border-t border-slate-200 space-y-2">
                           {tool.specs.map((spec) => (
                             <div
                               key={spec.label}
                               className="flex items-center justify-between gap-3 text-xs"
                             >
-                              <dt className="text-slate-600 font-medium">{spec.label}</dt>
-                              <dd className="font-mono tabular-nums font-semibold text-slate-950 text-right">
+                              <dt className="text-slate-500 font-medium">{spec.label}</dt>
+                              <dd className="font-mono tabular-nums font-semibold text-slate-900 text-right">
                                 {spec.value}
                               </dd>
                             </div>
@@ -552,9 +556,9 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                       </div>
                     </div>
 
-                    <div className="px-6 pb-6 pt-3 border-t border-slate-300/70 flex items-center justify-between gap-3">
+                    <div className="px-6 pb-6 pt-3 border-t border-slate-200 flex items-center justify-between gap-3">
                       <div>
-                        <span className="block text-[11px] font-medium text-slate-600">
+                        <span className="block text-[11px] font-medium text-slate-500">
                           Unit List Price
                         </span>
                         <span className="font-mono tabular-nums text-base font-bold text-slate-950">
@@ -566,7 +570,7 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                         <button
                           type="button"
                           onClick={() => setSelectedTool(tool)}
-                          className="px-3 py-2 text-xs font-semibold text-slate-900 hover:text-slate-950 bg-white hover:bg-slate-200/70 border border-slate-300 rounded-md transition-colors cursor-pointer whitespace-nowrap shrink-0"
+                          className="px-3 py-2 text-xs font-semibold text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-md transition-colors cursor-pointer whitespace-nowrap shrink-0"
                         >
                           Specs
                         </button>
@@ -601,12 +605,12 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
         </section>
 
         {/* Buyer Verification & Related Divisions Section */}
-        <section className="bg-[#12161E] py-16 sm:py-20 border-b border-slate-800/70">
-          <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
+        <section className="bg-slate-50/70 py-16 sm:py-20">
+          <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
               <div className="lg:col-span-7 space-y-4">
                 <h2
-                  className="text-2xl sm:text-3xl font-bold text-slate-50 tracking-tight"
+                  className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight"
                   style={{ textWrap: 'balance' }}
                 >
                   {config.guideHeading}
@@ -614,11 +618,11 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                 {config.guideParagraphs.map((para, idx) => (
                   <div key={idx} className="space-y-1.5">
                     {para.heading && (
-                      <h3 className="text-base sm:text-lg font-semibold text-white pt-2">
+                      <h3 className="text-base sm:text-lg font-semibold text-slate-900 pt-2">
                         {para.heading}
                       </h3>
                     )}
-                    <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                    <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                       {para.text}
                     </p>
                   </div>
@@ -626,19 +630,19 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
               </div>
 
               <aside className="lg:col-span-5 space-y-5">
-                <div className="bg-[#1A202B] border border-slate-800 rounded-xl p-6">
-                  <h3 className="text-base font-bold text-amber-400 mb-3">
+                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+                  <h3 className="text-base font-bold text-slate-950 mb-3">
                     {config.checklistTitle}
                   </h3>
-                  <ul className="space-y-2.5 text-sm text-slate-300 list-disc pl-5">
+                  <ul className="space-y-2.5 text-sm text-slate-600 list-disc pl-5">
                     {config.checklist.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="bg-[#1A202B] border border-slate-800 rounded-xl p-6">
-                  <h3 className="text-base font-bold text-amber-400 mb-3">
+                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+                  <h3 className="text-base font-bold text-slate-950 mb-3">
                     Explore Related Divisions
                   </h3>
                   <ul className="space-y-2.5 text-sm">
@@ -646,7 +650,7 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                       <li key={rel}>
                         <a
                           href={PAGE_PATHS[rel]}
-                          className="text-slate-200 hover:text-amber-400 underline underline-offset-4 transition-colors"
+                          className="text-[#0284C7] hover:text-sky-700 font-medium underline underline-offset-4 transition-colors"
                         >
                           {PAGE_CONFIGS[rel].navTitle} →
                         </a>
@@ -655,7 +659,7 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                     <li>
                       <a
                         href="../index.html#technical-support"
-                        className="text-slate-200 hover:text-amber-400 underline underline-offset-4 transition-colors"
+                        className="text-[#0284C7] hover:text-sky-700 font-medium underline underline-offset-4 transition-colors"
                       >
                         Technical Support &amp; Calibration Manuals →
                       </a>
@@ -666,10 +670,10 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
             </div>
 
             {/* Direct Enquiry Callout Band */}
-            <div className="mt-12 bg-[#161B24] border-2 border-amber-500/60 rounded-xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="mt-12 bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
-                <h3 className="text-lg sm:text-xl font-bold text-white">{config.enquiryTitle}</h3>
-                <p className="mt-1.5 text-sm text-slate-300">{config.enquirySubtitle}</p>
+                <h3 className="text-lg sm:text-xl font-bold text-slate-950">{config.enquiryTitle}</h3>
+                <p className="mt-1.5 text-sm text-slate-600">{config.enquirySubtitle}</p>
               </div>
               <div className="flex flex-wrap items-center gap-3 shrink-0">
                 <a
@@ -683,7 +687,7 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
                 </a>
                 <a
                   href={`mailto:sales@mycarparts.pk?subject=${encodeURIComponent(config.emailSubject)}`}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-200 hover:text-white border border-slate-700 hover:border-amber-500 rounded-md transition-colors whitespace-nowrap"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-md transition-colors whitespace-nowrap"
                 >
                   <Mail className="w-4 h-4" aria-hidden="true" />
                   <span>sales@mycarparts.pk</span>
@@ -694,7 +698,7 @@ export function CategoryLandingApp({ category }: CategoryLandingAppProps) {
         </section>
       </main>
 
-      <Footer basePath=".." />
+      <Footer basePath=".." compact />
 
       <ToolDetailModal
         tool={selectedTool}

@@ -46,7 +46,9 @@ export function CategoryTriad() {
                       src={card.image}
                       alt={card.title}
                       fallbackLabel={card.title}
-                      className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                      className={`w-full h-full transition-transform duration-500 ease-out group-hover:scale-[1.03] ${
+                        card.id === 'generators' ? 'object-cover' : 'object-contain p-2'
+                      }`}
                     />
                   </div>
 

@@ -13,6 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import { CookieBanner, CookiePreferences } from '../components/CookieBanner';
+import { EnquiryModal } from '../components/EnquiryModal';
 import { Footer } from '../components/Footer';
 import { Navbar } from '../components/Navbar';
 import { PromoBannerCarousel } from '../components/PromoBannerCarousel';
@@ -51,6 +52,7 @@ function renderCategoryIcon(iconKey: CarSubCategoryItem['iconKey']) {
 export function CarPartsCatalogApp() {
   const [activeTab, setActiveTab] = useState<CarCatalogTabId>('car-parts');
   const [selectedItem, setSelectedItem] = useState<CarSubCategoryItem | null>(null);
+  const [enquiryModalOpen, setEnquiryModalOpen] = useState(false);
   const [vehicleInput, setVehicleInput] = useState('');
   const [cookieBannerVisible, setCookieBannerVisible] = useState<boolean>(() => {
     try {
@@ -99,6 +101,7 @@ export function CarPartsCatalogApp() {
         quoteCount={0}
         onSelectCategory={() => {}}
         onOpenQuote={() => {}}
+        onOpenEnquiry={() => setEnquiryModalOpen(true)}
       />
 
       <main className="flex-1 bg-white">
@@ -284,6 +287,13 @@ export function CarPartsCatalogApp() {
           </div>
         </div>
       )}
+
+      <EnquiryModal
+        open={enquiryModalOpen}
+        divisionTitle="Car Spare Parts"
+        placeholderHint="e.g. Toyota Corolla 2021 · Brake Pads · OEM code or VIN"
+        onClose={() => setEnquiryModalOpen(false)}
+      />
 
       <CookieBanner visible={cookieBannerVisible} onDismiss={handleCookieDismiss} />
     </div>
