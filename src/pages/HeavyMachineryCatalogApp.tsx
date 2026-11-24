@@ -112,29 +112,6 @@ export function HeavyMachineryCatalogApp() {
                   parts alongside 700-bar hydraulic service systems. Every enquiry is cross-checked
                   by machine serial plate and OEM part code for verified fitment.
                 </p>
-
-                <div className="mt-8 flex flex-wrap items-center gap-4">
-                  <a
-                    href={`https://wa.me/923002183149?text=${encodeURIComponent(
-                      'Hello My Car Parts, please check Heavy Machinery, Excavator & Hydraulic Parts availability.',
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap"
-                  >
-                    <MessageCircle className="w-4 h-4" aria-hidden="true" />
-                    <span>Enquire on WhatsApp (+92 300 2183149)</span>
-                  </a>
-                  <a
-                    href={`mailto:sales@mycarparts.pk?subject=${encodeURIComponent(
-                      'Heavy Machinery & Excavator Parts Enquiry',
-                    )}`}
-                    className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-md transition-colors whitespace-nowrap"
-                  >
-                    <Mail className="w-4 h-4" aria-hidden="true" />
-                    <span>Email sales@mycarparts.pk</span>
-                  </a>
-                </div>
               </div>
 
               <div className="lg:col-span-6">
