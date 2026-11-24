@@ -92,16 +92,6 @@ export function HeavyMachineryCatalogApp() {
         {/* Header & Image on Right Side */}
         <section className="bg-white border-b border-slate-200 pt-8 pb-12 sm:pt-12 sm:pb-16">
           <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
-            <nav aria-label="Breadcrumb" className="text-xs text-slate-500 mb-5">
-              <a href="../index.html" className="hover:text-[#0284C7] transition-colors">
-                Home
-              </a>
-              <span className="mx-2" aria-hidden="true">
-                /
-              </span>
-              <span className="text-slate-900 font-medium">Heavy Machinery Parts</span>
-            </nav>
-
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
               <div className="lg:col-span-6">
                 <p className="text-xs sm:text-sm font-semibold text-amber-700 tracking-wide mb-3">

@@ -225,7 +225,7 @@ export function Footer({ basePath = '.', compact = false }: FooterProps) {
               className="inline-flex items-center bg-[#F7F6F2] rounded-xl px-3.5 py-2 border-2 border-slate-300/80 hover:border-amber-500 transition-colors"
             >
               <img
-                src={`${basePath}/assets/aistudio/my-car-parts-logo_b8556d44.png`}
+                src={`${basePath}/assets/logo/my-car-parts-logo.png`}
                 alt="My Car Parts"
                 className="h-14 sm:h-16 w-auto object-contain"
               />

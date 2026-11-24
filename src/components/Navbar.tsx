@@ -67,7 +67,7 @@ export function Navbar({
           className="inline-flex items-center shrink-0 bg-[#F7F6F2] rounded-md px-2.5 py-1 border border-slate-300/80 hover:border-amber-500 transition-colors"
         >
           <img
-            src={`${basePath}/assets/aistudio/my-car-parts-logo_b8556d44.png`}
+            src={`${basePath}/assets/logo/my-car-parts-logo.png`}
             alt="My Car Parts"
             className="h-9 sm:h-10 w-auto object-contain"
           />
