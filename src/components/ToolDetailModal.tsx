@@ -1,5 +1,6 @@
 import { Check, Plus, ShieldCheck, X } from 'lucide-react';
 import { ToolItem } from '../data/inventory';
+import { resolveAssetUrl } from '../lib/cmsValidation';
 import { SafeImage } from './SafeImage';
 
 interface ToolDetailModalProps {
@@ -49,7 +50,7 @@ export function ToolDetailModal({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div className="aspect-[4/3] rounded-lg overflow-hidden border border-slate-800 bg-[#10141B]">
               <SafeImage
-                src={tool.image}
+                src={resolveAssetUrl(tool.image, '.')}
                 alt={tool.name}
                 fallbackLabel={tool.name}
                 className="w-full h-full object-cover"

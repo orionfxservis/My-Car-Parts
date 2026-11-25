@@ -1,8 +1,13 @@
 import { ArrowRight } from 'lucide-react';
-import { CATEGORY_CARDS } from '../data/inventory';
+import { CATEGORY_CARDS, CategoryCardData } from '../data/inventory';
+import { resolveAssetUrl } from '../lib/cmsValidation';
 import { SafeImage } from './SafeImage';
 
-export function CategoryTriad() {
+interface CategoryTriadProps {
+  cards?: CategoryCardData[];
+}
+
+export function CategoryTriad({ cards = CATEGORY_CARDS }: CategoryTriadProps) {
   return (
     <section
       id="categories"
@@ -28,7 +33,7 @@ export function CategoryTriad() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {CATEGORY_CARDS.map((card) => {
+          {cards.map((card) => {
             const pageHref =
               card.id === 'cars'
                 ? './pages/car-parts.html'
@@ -43,7 +48,7 @@ export function CategoryTriad() {
                 <div>
                   <div className="aspect-[16/9] w-full overflow-hidden bg-white relative">
                     <SafeImage
-                      src={card.image}
+                      src={resolveAssetUrl(card.image, '.')}
                       alt={card.title}
                       fallbackLabel={card.title}
                       className={`w-full h-full transition-transform duration-500 ease-out group-hover:scale-[1.03] ${

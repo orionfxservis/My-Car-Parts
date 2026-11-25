@@ -1,0 +1,460 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Startup connectivity check document
+    match /test/connection {
+      allow get: if true;
+    }
+
+    // Core Reusable Primitives
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isBootstrapAdmin() {
+      return isVerifiedUser() && request.auth.token.email == 'orionfxservis@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrapAdmin() || (
+        isVerifiedUser() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidStringList(listVal, maxItems) {
+      return listVal is list &&
+        listVal.size() <= maxItems &&
+        (listVal.size() == 0 || listVal[0] is string);
+    }
+
+    function isValidMapList(listVal, maxItems) {
+      return listVal is list &&
+        listVal.size() <= maxItems &&
+        (listVal.size() == 0 || listVal[0] is map);
+    }
+
+    // Validation Blueprints
+    function isValidSiteSection(data) {
+      return data.keys().hasAll([
+          'id', 'page', 'eyebrow', 'heading', 'description',
+          'secondaryHeading', 'secondaryText', 'image', 'stats', 'items',
+          'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'page', 'eyebrow', 'heading', 'description',
+          'secondaryHeading', 'secondaryText', 'image', 'stats', 'items',
+          'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        data.page in ['main', 'cars', 'generators', 'machinery'] &&
+        data.eyebrow is string && data.eyebrow.size() <= 240 &&
+        data.heading is string && data.heading.size() >= 1 && data.heading.size() <= 300 &&
+        data.description is string && data.description.size() <= 2500 &&
+        data.secondaryHeading is string && data.secondaryHeading.size() <= 300 &&
+        data.secondaryText is string && data.secondaryText.size() <= 2500 &&
+        data.image is string && data.image.size() <= 350000 &&
+        isValidMapList(data.stats, 6) &&
+        isValidMapList(data.items, 25) &&
+        data.updatedBy is string && data.updatedBy == request.auth.uid && data.updatedBy.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidHeroSlide(data) {
+      return data.keys().hasAll([
+          'id', 'sortOrder', 'toolId', 'categoryLabel', 'sku',
+          'title', 'specSummary', 'image', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'sortOrder', 'toolId', 'categoryLabel', 'sku',
+          'title', 'specSummary', 'image', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        data.sortOrder is number && data.sortOrder >= 0 && data.sortOrder <= 1000 &&
+        isValidId(data.toolId) &&
+        data.categoryLabel is string && data.categoryLabel.size() >= 1 && data.categoryLabel.size() <= 120 &&
+        data.sku is string && data.sku.size() >= 1 && data.sku.size() <= 60 &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 200 &&
+        data.specSummary is string && data.specSummary.size() <= 240 &&
+        data.image is string && data.image.size() <= 350000 &&
+        data.updatedBy is string && data.updatedBy == request.auth.uid && data.updatedBy.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidDivisionCard(data) {
+      return data.keys().hasAll([
+          'id', 'sortOrder', 'indexLabel', 'title', 'subtitle',
+          'description', 'image', 'ctaLabel', 'highlights',
+          'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'sortOrder', 'indexLabel', 'title', 'subtitle',
+          'description', 'image', 'ctaLabel', 'highlights',
+          'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.id in ['cars', 'generators', 'machinery'] &&
+        data.sortOrder is number && data.sortOrder >= 0 && data.sortOrder <= 100 &&
+        data.indexLabel is string && data.indexLabel.size() >= 1 && data.indexLabel.size() <= 120 &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 160 &&
+        data.subtitle is string && data.subtitle.size() <= 200 &&
+        data.description is string && data.description.size() >= 1 && data.description.size() <= 1500 &&
+        data.image is string && data.image.size() <= 350000 &&
+        data.ctaLabel is string && data.ctaLabel.size() <= 100 &&
+        isValidMapList(data.highlights, 6) &&
+        data.updatedBy is string && data.updatedBy == request.auth.uid && data.updatedBy.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidToolInventoryItem(data) {
+      return data.keys().hasAll([
+          'id', 'sortOrder', 'sku', 'name', 'category', 'categoryLabel',
+          'image', 'shortDesc', 'fullDesc', 'price', 'availability', 'warranty',
+          'specs', 'applications', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'sortOrder', 'sku', 'name', 'category', 'categoryLabel',
+          'image', 'shortDesc', 'fullDesc', 'price', 'availability', 'warranty',
+          'specs', 'applications', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        data.sortOrder is number && data.sortOrder >= 0 && data.sortOrder <= 1000 &&
+        data.sku is string && data.sku.size() >= 1 && data.sku.size() <= 60 &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+        data.category in ['cars', 'generators', 'machinery'] &&
+        data.categoryLabel is string && data.categoryLabel.size() >= 1 && data.categoryLabel.size() <= 120 &&
+        data.image is string && data.image.size() <= 350000 &&
+        data.shortDesc is string && data.shortDesc.size() <= 600 &&
+        data.fullDesc is string && data.fullDesc.size() <= 1500 &&
+        data.price is number && data.price >= 0 && data.price <= 10000000 &&
+        data.availability in ['In Stock', 'Built to Order'] &&
+        data.warranty is string && data.warranty.size() <= 200 &&
+        isValidMapList(data.specs, 10) &&
+        isValidStringList(data.applications, 10) &&
+        data.updatedBy is string && data.updatedBy == request.auth.uid && data.updatedBy.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidPromoBanner(data) {
+      return data.keys().hasAll([
+          'id', 'page', 'sortOrder', 'title', 'subtitle',
+          'image', 'enquiryTopic', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'page', 'sortOrder', 'title', 'subtitle',
+          'image', 'enquiryTopic', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        data.page in ['cars', 'generators'] &&
+        data.sortOrder is number && data.sortOrder >= 0 && data.sortOrder <= 1000 &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 180 &&
+        data.subtitle is string && data.subtitle.size() <= 400 &&
+        data.image is string && data.image.size() <= 350000 &&
+        data.enquiryTopic is string && data.enquiryTopic.size() <= 240 &&
+        data.updatedBy is string && data.updatedBy == request.auth.uid && data.updatedBy.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidCarMake(data) {
+      return data.keys().hasAll([
+          'id', 'sortOrder', 'brand', 'models', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'sortOrder', 'brand', 'models', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        data.sortOrder is number && data.sortOrder >= 0 && data.sortOrder <= 1000 &&
+        data.brand is string && data.brand.size() >= 1 && data.brand.size() <= 80 &&
+        isValidStringList(data.models, 60) &&
+        data.updatedBy is string && data.updatedBy == request.auth.uid && data.updatedBy.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidCatalogProduct(data) {
+      return data.keys().hasAll([
+          'id', 'page', 'sortOrder', 'title', 'subsystem', 'tab', 'iconKey',
+          'image', 'cover', 'summary', 'components', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'page', 'sortOrder', 'title', 'subsystem', 'tab', 'iconKey',
+          'image', 'cover', 'summary', 'components', 'updatedBy', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        data.page in ['cars', 'generators', 'machinery'] &&
+        data.sortOrder is number && data.sortOrder >= 0 && data.sortOrder <= 5000 &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 180 &&
+        data.subsystem is string && data.subsystem.size() <= 160 &&
+        data.tab is string && data.tab.size() <= 60 &&
+        data.iconKey is string && data.iconKey.size() <= 40 &&
+        data.image is string && data.image.size() <= 350000 &&
+        data.cover is bool &&
+        data.summary is string && data.summary.size() >= 1 && data.summary.size() <= 1200 &&
+        isValidStringList(data.components, 15) &&
+        data.updatedBy is string && data.updatedBy == request.auth.uid && data.updatedBy.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidAdminUser(data) {
+      return data.keys().hasAll(['uid', 'role', 'addedBy', 'createdAt']) &&
+        data.keys().hasOnly(['uid', 'role', 'addedBy', 'createdAt']) &&
+        isValidId(data.uid) &&
+        data.role == 'admin' &&
+        data.addedBy is string && data.addedBy == request.auth.uid && data.addedBy.size() <= 128 &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidTechnicalInquiry(data) {
+      return data.keys().hasAll([
+          'id', 'ticketCode', 'title', 'contactName', 'mobileNo',
+          'equipmentDivision', 'partName', 'toolSkuSerial', 'technicalDetails',
+          'adminMobileNo', 'status', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ticketCode', 'title', 'contactName', 'mobileNo',
+          'equipmentDivision', 'partName', 'toolSkuSerial', 'technicalDetails',
+          'adminMobileNo', 'status', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        data.ticketCode is string && data.ticketCode.size() >= 3 && data.ticketCode.size() <= 32 &&
+        data.title == 'New Inquiry Mail' &&
+        data.contactName is string && data.contactName.size() >= 1 && data.contactName.size() <= 120 &&
+        data.mobileNo is string && data.mobileNo.size() >= 7 && data.mobileNo.size() <= 32 &&
+        data.equipmentDivision in ['Car Spare Parts', 'Industrial Generator Spare Parts', 'Heavy Machinery Parts'] &&
+        data.partName is string && data.partName.size() >= 1 && data.partName.size() <= 180 &&
+        data.toolSkuSerial is string && data.toolSkuSerial.size() <= 80 &&
+        data.technicalDetails is string && data.technicalDetails.size() >= 5 && data.technicalDetails.size() <= 2000 &&
+        data.adminMobileNo is string && data.adminMobileNo.size() <= 32 &&
+        data.status in ['unread', 'read'] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    // 1. Page Sections
+    match /site_sections/{sectionId} {
+      allow get: if isValidId(sectionId);
+      allow list: if resource.data.page in ['main', 'cars', 'generators', 'machinery'];
+      allow create: if isSignedIn() && isValidId(sectionId) && isValidSiteSection(incoming()) &&
+        incoming().id == sectionId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+      allow update: if isSignedIn() && isValidId(sectionId) && isValidSiteSection(incoming()) && (
+        isAdmin() &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'page', 'eyebrow', 'heading', 'description',
+          'secondaryHeading', 'secondaryText', 'image', 'stats', 'items',
+          'updatedBy', 'updatedAt'
+        ])
+      );
+      allow delete: if isSignedIn() && isValidId(sectionId) && isAdmin();
+    }
+
+    // 2. Hero Slides
+    match /hero_slides/{slideId} {
+      allow get: if isValidId(slideId);
+      allow list: if resource.data.sortOrder >= 0;
+      allow create: if isSignedIn() && isValidId(slideId) && isValidHeroSlide(incoming()) &&
+        incoming().id == slideId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+      allow update: if isSignedIn() && isValidId(slideId) && isValidHeroSlide(incoming()) && (
+        isAdmin() &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'sortOrder', 'toolId', 'categoryLabel', 'sku',
+          'title', 'specSummary', 'image', 'updatedBy', 'updatedAt'
+        ])
+      );
+      allow delete: if isSignedIn() && isValidId(slideId) && isAdmin();
+    }
+
+    // 3. Division Cards
+    match /division_cards/{cardId} {
+      allow get: if isValidId(cardId);
+      allow list: if resource.data.id in ['cars', 'generators', 'machinery'];
+      allow create: if isSignedIn() && isValidId(cardId) && isValidDivisionCard(incoming()) &&
+        incoming().id == cardId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+      allow update: if isSignedIn() && isValidId(cardId) && isValidDivisionCard(incoming()) && (
+        isAdmin() &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'sortOrder', 'indexLabel', 'title', 'subtitle',
+          'description', 'image', 'ctaLabel', 'highlights',
+          'updatedBy', 'updatedAt'
+        ])
+      );
+      allow delete: if isSignedIn() && isValidId(cardId) && isAdmin();
+    }
+
+    // 4. Tool Inventory
+    match /tool_inventory/{toolId} {
+      allow get: if isValidId(toolId);
+      allow list: if resource.data.category in ['cars', 'generators', 'machinery'];
+      allow create: if isSignedIn() && isValidId(toolId) && isValidToolInventoryItem(incoming()) &&
+        incoming().id == toolId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+      allow update: if isSignedIn() && isValidId(toolId) && isValidToolInventoryItem(incoming()) && (
+        isAdmin() &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'sortOrder', 'sku', 'name', 'category', 'categoryLabel',
+          'image', 'shortDesc', 'fullDesc', 'price', 'availability', 'warranty',
+          'specs', 'applications', 'updatedBy', 'updatedAt'
+        ])
+      );
+      allow delete: if isSignedIn() && isValidId(toolId) && isAdmin();
+    }
+
+    // 5. Promo Banners
+    match /promo_banners/{bannerId} {
+      allow get: if isValidId(bannerId);
+      allow list: if resource.data.page in ['cars', 'generators'];
+      allow create: if isSignedIn() && isValidId(bannerId) && isValidPromoBanner(incoming()) &&
+        incoming().id == bannerId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+      allow update: if isSignedIn() && isValidId(bannerId) && isValidPromoBanner(incoming()) && (
+        isAdmin() &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'page', 'sortOrder', 'title', 'subtitle',
+          'image', 'enquiryTopic', 'updatedBy', 'updatedAt'
+        ])
+      );
+      allow delete: if isSignedIn() && isValidId(bannerId) && isAdmin();
+    }
+
+    // 6. Car Makes Directory
+    match /car_makes/{makeId} {
+      allow get: if isValidId(makeId);
+      allow list: if resource.data.sortOrder >= 0;
+      allow create: if isSignedIn() && isValidId(makeId) && isValidCarMake(incoming()) &&
+        incoming().id == makeId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+      allow update: if isSignedIn() && isValidId(makeId) && isValidCarMake(incoming()) && (
+        isAdmin() &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'sortOrder', 'brand', 'models', 'updatedBy', 'updatedAt'
+        ])
+      );
+      allow delete: if isSignedIn() && isValidId(makeId) && isAdmin();
+    }
+
+    // 7. Catalog Products (Car, Generator, Heavy Machinery Product Cards)
+    match /catalog_products/{productId} {
+      allow get: if isValidId(productId);
+      allow list: if resource.data.page in ['cars', 'generators', 'machinery'];
+      allow create: if isSignedIn() && isValidId(productId) && isValidCatalogProduct(incoming()) &&
+        incoming().id == productId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+      allow update: if isSignedIn() && isValidId(productId) && isValidCatalogProduct(incoming()) && (
+        isAdmin() &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'page', 'sortOrder', 'title', 'subsystem', 'tab', 'iconKey',
+          'image', 'cover', 'summary', 'components', 'updatedBy', 'updatedAt'
+        ])
+      );
+      allow delete: if isSignedIn() && isValidId(productId) && isAdmin();
+    }
+
+    // 8. Admin Users Registry
+    match /admins/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && (
+        request.auth.uid == userId || isBootstrapAdmin()
+      );
+      allow list: if isBootstrapAdmin();
+      allow create: if isSignedIn() && isValidId(userId) && isValidAdminUser(incoming()) &&
+        incoming().uid == userId &&
+        incoming().createdAt == request.time &&
+        isBootstrapAdmin();
+      allow update: if false;
+      allow delete: if isSignedIn() && isValidId(userId) && isBootstrapAdmin();
+    }
+
+    // 9. Customer Technical Inquiries (PII strictly admin-readable)
+    match /technical_inquiries/{inquiryId} {
+      allow get: if isSignedIn() && isValidId(inquiryId) && isAdmin();
+      allow list: if isSignedIn() && resource.data.status in ['unread', 'read'] && isAdmin();
+      allow create: if isValidId(inquiryId) &&
+        isValidTechnicalInquiry(incoming()) &&
+        incoming().id == inquiryId &&
+        incoming().status == 'unread' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isSignedIn() && isValidId(inquiryId) && isValidTechnicalInquiry(incoming()) && (
+        isAdmin() &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().ticketCode == existing().ticketCode &&
+        incoming().title == existing().title &&
+        incoming().contactName == existing().contactName &&
+        incoming().mobileNo == existing().mobileNo &&
+        incoming().equipmentDivision == existing().equipmentDivision &&
+        incoming().partName == existing().partName &&
+        incoming().toolSkuSerial == existing().toolSkuSerial &&
+        incoming().technicalDetails == existing().technicalDetails &&
+        incoming().adminMobileNo == existing().adminMobileNo &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt'])
+      );
+      allow delete: if isSignedIn() && isValidId(inquiryId) && isAdmin();
+    }
+  }
+}

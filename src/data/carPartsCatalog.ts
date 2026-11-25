@@ -19,16 +19,17 @@ import bannerShippingImg from '../assets/images/banner_car_shipping_179544508150
 import bannerFitmentImg from '../assets/images/banner_car_fitment_1795445081707.jpg';
 import bannerWorkshopImg from '../assets/images/banner_car_workshop_1795445081292.jpg';
 
-export type CarCatalogTabId =
-  | 'car-parts'
-  | 'oils-fluids'
-  | 'accessories'
-  | 'tools'
-  | 'bicycle-parts';
+export type CarCatalogTabId = string;
 
 export interface CarCatalogTab {
   id: CarCatalogTabId;
   label: string;
+}
+
+export interface CarMakeEntry {
+  id: string;
+  brand: string;
+  models: string[];
 }
 
 export interface CarSubCategoryItem {
@@ -43,7 +44,6 @@ export interface CarSubCategoryItem {
     | 'sparkles'
     | 'wrench'
     | 'shield'
-    | 'bike'
     | 'cog';
   summary: string;
   components: string[];
@@ -54,7 +54,235 @@ export const CAR_CATALOG_TABS: CarCatalogTab[] = [
   { id: 'oils-fluids', label: 'Oils and fluids' },
   { id: 'accessories', label: 'Accessories and equipment' },
   { id: 'tools', label: 'Tools' },
-  { id: 'bicycle-parts', label: 'Bicycle parts' },
+];
+
+export const CAR_MAKES_DIRECTORY: CarMakeEntry[] = [
+  {
+    id: 'toyota',
+    brand: 'Toyota',
+    models: [
+      'Corolla & Altis',
+      'Yaris',
+      'Corolla Cross',
+      'Raize',
+      'Fortuner',
+      'Hilux / Vigo / Revo',
+      'Hilux Surf',
+      'Land Cruiser',
+      'Land Cruiser Prado',
+      'FJ Cruiser',
+      'Vitz',
+      'Passo',
+      'Aqua',
+      'Prius',
+      'Prius Alpha',
+      'Belta',
+      'Platz',
+      'Premio',
+      'Axio',
+      'Fielder',
+      'C-HR',
+      'Mark X',
+      'Probox',
+      'Rush',
+      'Camry',
+      'iQ',
+    ],
+  },
+  {
+    id: 'honda',
+    brand: 'Honda',
+    models: [
+      'Civic',
+      'City',
+      'Accord',
+      'Vezel',
+      'HR-V',
+      'BR-V',
+      'Fit',
+      'Jazz',
+      'Freed',
+      'Insight',
+      'CR-Z',
+      'N-Box',
+      'N-One',
+      'N-Wgn',
+      'Crossroad',
+      'Life',
+      'Airwave',
+      'Elysion',
+      'Element',
+      'Vamos',
+    ],
+  },
+  {
+    id: 'suzuki',
+    brand: 'Suzuki',
+    models: [
+      'Alto (PKDM & JDM)',
+      'Cultus',
+      'Wagon R',
+      'Swift',
+      'Mehran',
+      'Bolan',
+      'Every',
+      'Ravi',
+      'Ciaz',
+      'Liana',
+      'Baleno',
+      'Vitara',
+      'Fronx',
+      'Xbee',
+      'Khyber',
+      'Kizashi',
+      'Alto Lapin',
+      'Alto Works',
+      'MR Wagon',
+    ],
+  },
+  {
+    id: 'hyundai',
+    brand: 'Hyundai',
+    models: [
+      'Elantra',
+      'Tucson',
+      'Santa Fe',
+      'Sonata',
+      'Santro',
+      'Grand Starex',
+      'Ioniq',
+    ],
+  },
+  {
+    id: 'kia',
+    brand: 'Kia',
+    models: [
+      'Sportage',
+      'Stonic',
+      'Sorento',
+      'Picanto',
+      'Grand Carnival',
+      'Cerato',
+    ],
+  },
+  {
+    id: 'daihatsu',
+    brand: 'Daihatsu',
+    models: [
+      'Mira',
+      'Cuore',
+      'Hijet',
+      'Move',
+      'Boon',
+      'Cast',
+      'Tanto',
+      'Charade',
+      'Copen',
+    ],
+  },
+  {
+    id: 'mitsubishi',
+    brand: 'Mitsubishi',
+    models: [
+      'Lancer',
+      'eK Wagon',
+      'Mirage',
+      'Minicab',
+      'Pajero Mini',
+    ],
+  },
+  {
+    id: 'nissan',
+    brand: 'Nissan',
+    models: [
+      'Dayz',
+      'Note',
+      'AD Expert',
+      'Clipper',
+      'Juke',
+      'Moco',
+      'Wingroad',
+    ],
+  },
+  {
+    id: 'changan',
+    brand: 'Changan',
+    models: ['Alsvin', 'Karvaan', 'Oshan X7'],
+  },
+  {
+    id: 'haval',
+    brand: 'Haval',
+    models: ['Haval H6', 'Haval H6 PHEV', 'Haval Jolion', 'GWM Haval Truck'],
+  },
+  {
+    id: 'deepal',
+    brand: 'Deepal',
+    models: ['Deepal S05', 'Deepal S07', 'Deepal L07'],
+  },
+  {
+    id: 'chery',
+    brand: 'Chery',
+    models: ['Tiggo 9', 'Chery QQ'],
+  },
+  {
+    id: 'mg',
+    brand: 'MG',
+    models: ['MG HS', 'MG HS PHEV', 'MG ZS', 'MG ZS EV'],
+  },
+  {
+    id: 'jaecoo',
+    brand: 'Jaecoo',
+    models: ['Jaecoo J5', 'Jaecoo J6', 'Jaecoo J7'],
+  },
+  {
+    id: 'jetour',
+    brand: 'Jetour',
+    models: ['Jetour X70 Plus', 'Jetour Dashing'],
+  },
+  {
+    id: 'faw',
+    brand: 'FAW',
+    models: ['FAW V2', 'FAW XPV'],
+  },
+  {
+    id: 'dfsk',
+    brand: 'DFSK',
+    models: ['DFSK Glory 580', 'DFSK K07'],
+  },
+  {
+    id: 'lexus',
+    brand: 'Lexus',
+    models: [
+      'CT200h',
+      'ES300h',
+      'HS250h',
+      'IS Series',
+      'GS Series',
+      'LS Series',
+      'NX Series',
+      'RX Series',
+      'LX Series',
+    ],
+  },
+  {
+    id: 'other-models',
+    brand: 'Other Models',
+    models: [
+      'Mercedes-Benz (C / E / S / G Class)',
+      'Audi (A3 / A4 / A5 / A6 / Q3 / Q5 / Q7)',
+      'BMW (X3 / X4 / X5 Series)',
+      'Isuzu D-Max',
+      'Proton Saga',
+      'Proton X70',
+      'BYD Atto 2 / Atto 3 / Seal / Shark',
+      'Peugeot 2008',
+      'JAC T9',
+      'Omoda E5',
+      'Mazda Carol',
+      'Ford F-150',
+      'Land Rover Discovery 4',
+    ],
+  },
 ];
 
 export const CAR_CATALOG_ITEMS: CarSubCategoryItem[] = [
@@ -438,56 +666,6 @@ export const CAR_CATALOG_ITEMS: CarSubCategoryItem[] = [
       'Fluted cup & 3-jaw oil filter wrenches',
       'Universal brake piston wind-back tool set',
       'Coil spring compressor & ball joint pullers',
-    ],
-  },
-
-  // Tab 5: Bicycle parts
-  {
-    id: 'bike-drivetrain',
-    tab: 'bicycle-parts',
-    title: 'Chains & cassettes',
-    iconKey: 'cog',
-    summary:
-      '8-to-12 speed bicycle chains, rear cassettes, cranksets, and derailleur hangers.',
-    components: [
-      '8, 9, 10, 11 & 12-speed reinforced chains',
-      'MTB & road freehub cassettes',
-    ],
-  },
-  {
-    id: 'bike-brakes',
-    tab: 'bicycle-parts',
-    title: 'Bicycle brake pads & rotors',
-    iconKey: 'bike',
-    summary:
-      'Resin and sintered hydraulic disc brake pads, 6-bolt/centerlock rotors, and V-brake blocks.',
-    components: [
-      'Organic & metallic disc brake pads',
-      '160 mm / 180 mm stainless brake rotors',
-    ],
-  },
-  {
-    id: 'bike-tires',
-    tab: 'bicycle-parts',
-    title: 'Tires & inner tubes',
-    iconKey: 'bike',
-    summary:
-      'Puncture-guarded commuter, road, and mountain tires paired with Presta & Schrader tubes.',
-    components: [
-      '26", 27.5", 29" & 700c tires',
-      'Butyl inner tubes & patch repair kits',
-    ],
-  },
-  {
-    id: 'bike-bearings',
-    tab: 'bicycle-parts',
-    title: 'Bearings & control cables',
-    iconKey: 'wrench',
-    summary:
-      'Sealed cartridge bottom brackets, headset bearings, and stainless shift/brake inner cables.',
-    components: [
-      'Sealed bottom brackets & hub bearings',
-      'PTFE-coated brake & gear cable sets',
     ],
   },
 ];

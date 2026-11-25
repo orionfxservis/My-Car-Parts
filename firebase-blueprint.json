@@ -1,0 +1,424 @@
+{
+  "entities": {
+    "SiteSection": {
+      "title": "SiteSection",
+      "description": "Editable section content (headings, copy, images, standards, and technical guides) for Main Page and Heavy Machinery Header.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "page": {
+          "type": "string",
+          "enum": ["main", "cars", "generators", "machinery"],
+          "maxLength": 32
+        },
+        "eyebrow": { "type": "string", "maxLength": 240 },
+        "heading": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "description": { "type": "string", "maxLength": 2500 },
+        "secondaryHeading": { "type": "string", "maxLength": 300 },
+        "secondaryText": { "type": "string", "maxLength": 2500 },
+        "image": { "type": "string", "maxLength": 350000 },
+        "stats": { "type": "array", "description": "Up to 6 metric or step items" },
+        "items": { "type": "array", "description": "Up to 25 structured sub-items (standards, guides, or category groups)" },
+        "updatedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "page",
+        "eyebrow",
+        "heading",
+        "description",
+        "secondaryHeading",
+        "secondaryText",
+        "image",
+        "stats",
+        "items",
+        "updatedBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "HeroSlide": {
+      "title": "HeroSlide",
+      "description": "Main page hero showcase and continuous 4K marquee slide card.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "sortOrder": { "type": "number" },
+        "toolId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "categoryLabel": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "sku": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "specSummary": { "type": "string", "maxLength": 240 },
+        "image": { "type": "string", "maxLength": 350000 },
+        "updatedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "sortOrder",
+        "toolId",
+        "categoryLabel",
+        "sku",
+        "title",
+        "specSummary",
+        "image",
+        "updatedBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "DivisionCard": {
+      "title": "DivisionCard",
+      "description": "Core equipment division card displayed on the Main Page.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": ["cars", "generators", "machinery"],
+          "maxLength": 32
+        },
+        "sortOrder": { "type": "number" },
+        "indexLabel": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "subtitle": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 1500 },
+        "image": { "type": "string", "maxLength": 350000 },
+        "ctaLabel": { "type": "string", "maxLength": 100 },
+        "highlights": { "type": "array", "description": "Up to 6 highlight key-value pairs" },
+        "updatedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "sortOrder",
+        "indexLabel",
+        "title",
+        "subtitle",
+        "description",
+        "image",
+        "ctaLabel",
+        "highlights",
+        "updatedBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ToolInventoryItem": {
+      "title": "ToolInventoryItem",
+      "description": "Detailed featured product/tooling specification record linked to Main Page quotes and inspections.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "sortOrder": { "type": "number" },
+        "sku": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "category": {
+          "type": "string",
+          "enum": ["cars", "generators", "machinery"],
+          "maxLength": 32
+        },
+        "categoryLabel": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "image": { "type": "string", "maxLength": 350000 },
+        "shortDesc": { "type": "string", "maxLength": 600 },
+        "fullDesc": { "type": "string", "maxLength": 1500 },
+        "price": { "type": "number" },
+        "availability": {
+          "type": "string",
+          "enum": ["In Stock", "Built to Order"],
+          "maxLength": 40
+        },
+        "warranty": { "type": "string", "maxLength": 200 },
+        "specs": { "type": "array" },
+        "applications": { "type": "array" },
+        "updatedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "sortOrder",
+        "sku",
+        "name",
+        "category",
+        "categoryLabel",
+        "image",
+        "shortDesc",
+        "fullDesc",
+        "price",
+        "availability",
+        "warranty",
+        "specs",
+        "applications",
+        "updatedBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "PromoBanner": {
+      "title": "PromoBanner",
+      "description": "Top carousel promo banner card for Car Spare Parts or Generator Spare Parts pages.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "page": {
+          "type": "string",
+          "enum": ["cars", "generators"],
+          "maxLength": 32
+        },
+        "sortOrder": { "type": "number" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "subtitle": { "type": "string", "maxLength": 400 },
+        "image": { "type": "string", "maxLength": 350000 },
+        "enquiryTopic": { "type": "string", "maxLength": 240 },
+        "updatedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "page",
+        "sortOrder",
+        "title",
+        "subtitle",
+        "image",
+        "enquiryTopic",
+        "updatedBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "CarMake": {
+      "title": "CarMake",
+      "description": "Vehicle brand and list of car models displayed on the Car Spare Parts page.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "sortOrder": { "type": "number" },
+        "brand": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "models": { "type": "array" },
+        "updatedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "sortOrder",
+        "brand",
+        "models",
+        "updatedBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "CatalogProduct": {
+      "title": "CatalogProduct",
+      "description": "Individual product card for Car Spare Parts, Industrial Generator Spare Parts, or Heavy Machinery Parts pages.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "page": {
+          "type": "string",
+          "enum": ["cars", "generators", "machinery"],
+          "maxLength": 32
+        },
+        "sortOrder": { "type": "number" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "subsystem": { "type": "string", "maxLength": 160 },
+        "tab": { "type": "string", "maxLength": 60 },
+        "iconKey": { "type": "string", "maxLength": 40 },
+        "image": { "type": "string", "maxLength": 350000 },
+        "cover": { "type": "boolean" },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "components": { "type": "array" },
+        "updatedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "page",
+        "sortOrder",
+        "title",
+        "subsystem",
+        "tab",
+        "iconKey",
+        "image",
+        "cover",
+        "summary",
+        "components",
+        "updatedBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized admin UID granted write permissions to storefront CMS collections.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "role": { "type": "string", "enum": ["admin"], "maxLength": 16 },
+        "addedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "role", "addedBy", "createdAt"]
+    },
+    "TechnicalInquiry": {
+      "title": "TechnicalInquiry",
+      "description": "Customer technical service / part inquiry submitted from the Main Page contact form.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "ticketCode": { "type": "string", "minLength": 3, "maxLength": 32 },
+        "title": { "type": "string", "enum": ["New Inquiry Mail"], "maxLength": 40 },
+        "contactName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "mobileNo": { "type": "string", "minLength": 7, "maxLength": 32 },
+        "equipmentDivision": {
+          "type": "string",
+          "enum": ["Car Spare Parts", "Industrial Generator Spare Parts", "Heavy Machinery Parts"],
+          "maxLength": 64
+        },
+        "partName": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "toolSkuSerial": { "type": "string", "maxLength": 80 },
+        "technicalDetails": { "type": "string", "minLength": 5, "maxLength": 2000 },
+        "adminMobileNo": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "enum": ["unread", "read"], "maxLength": 16 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "ticketCode",
+        "title",
+        "contactName",
+        "mobileNo",
+        "equipmentDivision",
+        "partName",
+        "toolSkuSerial",
+        "technicalDetails",
+        "adminMobileNo",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/site_sections/{sectionId}": {
+      "schema": { "$ref": "#/entities/SiteSection" },
+      "description": "Publicly readable, admin-editable page sections for Main Page and Heavy Machinery Header."
+    },
+    "/hero_slides/{slideId}": {
+      "schema": { "$ref": "#/entities/HeroSlide" },
+      "description": "Main Page hero crossfade & 4K marquee slides."
+    },
+    "/division_cards/{cardId}": {
+      "schema": { "$ref": "#/entities/DivisionCard" },
+      "description": "Main Page three division cards (cars, generators, machinery)."
+    },
+    "/tool_inventory/{toolId}": {
+      "schema": { "$ref": "#/entities/ToolInventoryItem" },
+      "description": "Main Page featured product specification items."
+    },
+    "/promo_banners/{bannerId}": {
+      "schema": { "$ref": "#/entities/PromoBanner" },
+      "description": "Promo banner slides for Car Spare Parts and Generator Spare Parts pages."
+    },
+    "/car_makes/{makeId}": {
+      "schema": { "$ref": "#/entities/CarMake" },
+      "description": "Car brand and model directory on the Car Spare Parts page."
+    },
+    "/catalog_products/{productId}": {
+      "schema": { "$ref": "#/entities/CatalogProduct" },
+      "description": "Product cards for Car Spare Parts, Generator Spare Parts, and Heavy Machinery Parts."
+    },
+    "/admins/{userId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Admin user RBAC registry."
+    },
+    "/technical_inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/entities/TechnicalInquiry" },
+      "description": "Customer inquiries submitted from the Main Page contact form; readable and manageable only by admins."
+    }
+  }
+}

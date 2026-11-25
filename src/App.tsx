@@ -7,6 +7,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { CategoryTriad } from './components/CategoryTriad';
 import { CompanySection } from './components/CompanySection';
 import { CookieBanner, CookiePreferences } from './components/CookieBanner';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Footer } from './components/Footer';
 import { HeroMarquee } from './components/HeroMarquee';
 import { LiveChatBubble } from './components/LiveChatBubble';
@@ -14,12 +15,14 @@ import { Navbar } from './components/Navbar';
 import { QuoteDrawer } from './components/QuoteDrawer';
 import { TechnicalSupport } from './components/TechnicalSupport';
 import { ToolDetailModal } from './components/ToolDetailModal';
-import { HeroSlideItem, TOOL_INVENTORY, ToolCategory, ToolItem } from './data/inventory';
+import { HeroSlideItem, ToolCategory, ToolItem } from './data/inventory';
+import { useMainPageCms } from './lib/useStorefrontCms';
 
 const COOKIE_STORAGE_KEY = 'my_car_parts_cookie_consent';
 const QUOTE_STORAGE_KEY = 'my_car_parts_quote_ids';
 
 export default function App() {
+  const { sections, heroSlides, divisionCards, toolInventory } = useMainPageCms();
   const [selectedTool, setSelectedTool] = useState<ToolItem | null>(null);
   const [quoteIds, setQuoteIds] = useState<string[]>(() => {
     try {
@@ -52,8 +55,8 @@ export default function App() {
   }, []);
 
   const quoteItems = useMemo(
-    () => TOOL_INVENTORY.filter((item) => quoteIds.includes(item.id)),
-    [quoteIds],
+    () => toolInventory.filter((item) => quoteIds.includes(item.id)),
+    [quoteIds, toolInventory],
   );
 
   const handleNavigateCategory = useCallback((category: ToolCategory) => {
@@ -80,12 +83,16 @@ export default function App() {
     }
   }, []);
 
-  const handleInspectSlide = useCallback((slide: HeroSlideItem) => {
-    const found = TOOL_INVENTORY.find((t) => t.id === slide.toolId);
-    if (found) {
-      setSelectedTool(found);
-    }
-  }, []);
+  const handleInspectSlide = useCallback(
+    (slide: HeroSlideItem) => {
+      const found =
+        toolInventory.find((t) => t.id === slide.toolId) || toolInventory[0] || null;
+      if (found) {
+        setSelectedTool(found);
+      }
+    },
+    [toolInventory],
+  );
 
   const handleToggleQuote = useCallback(
     (tool: ToolItem) => {
@@ -121,51 +128,58 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0D1015] text-slate-100">
-      <Navbar
-        quoteCount={quoteItems.length}
-        onSelectCategory={handleNavigateCategory}
-        onOpenQuote={() => setQuoteDrawerOpen(true)}
-      />
-
-      <main className="flex-1">
-        <HeroMarquee
-          onExploreCatalog={handleExploreCatalog}
-          onInspectSlide={handleInspectSlide}
-          onOpenSupport={handleOpenSupport}
+    <ErrorBoundary>
+      <div className="min-h-screen flex flex-col bg-[#0D1015] text-slate-100">
+        <Navbar
+          quoteCount={quoteItems.length}
+          onSelectCategory={handleNavigateCategory}
+          onOpenQuote={() => setQuoteDrawerOpen(true)}
         />
 
-        <CategoryTriad />
+        <main className="flex-1">
+          <HeroMarquee
+            section={sections['main-hero']}
+            slides={heroSlides}
+            onExploreCatalog={handleExploreCatalog}
+            onInspectSlide={handleInspectSlide}
+            onOpenSupport={handleOpenSupport}
+          />
 
-        <CompanySection />
+          <CategoryTriad cards={divisionCards} />
 
-        <TechnicalSupport onOpenChatWithTopic={(topic) => setChatExternalPrompt(topic)} />
-      </main>
+          <CompanySection section={sections['main-company']} />
 
-      <Footer />
+          <TechnicalSupport
+            section={sections['main-support']}
+            onOpenChatWithTopic={(topic) => setChatExternalPrompt(topic)}
+          />
+        </main>
 
-      <ToolDetailModal
-        tool={selectedTool}
-        inQuote={selectedTool ? quoteIds.includes(selectedTool.id) : false}
-        onClose={() => setSelectedTool(null)}
-        onToggleQuote={handleToggleQuote}
-      />
+        <Footer />
 
-      <QuoteDrawer
-        open={quoteDrawerOpen}
-        items={quoteItems}
-        onClose={() => setQuoteDrawerOpen(false)}
-        onRemoveItem={handleRemoveQuoteItem}
-        onClearItems={handleClearQuote}
-      />
+        <ToolDetailModal
+          tool={selectedTool}
+          inQuote={selectedTool ? quoteIds.includes(selectedTool.id) : false}
+          onClose={() => setSelectedTool(null)}
+          onToggleQuote={handleToggleQuote}
+        />
 
-      <LiveChatBubble
-        externalPrompt={chatExternalPrompt}
-        onConsumeExternalPrompt={handleConsumePrompt}
-        cookieBannerVisible={cookieBannerVisible}
-      />
+        <QuoteDrawer
+          open={quoteDrawerOpen}
+          items={quoteItems}
+          onClose={() => setQuoteDrawerOpen(false)}
+          onRemoveItem={handleRemoveQuoteItem}
+          onClearItems={handleClearQuote}
+        />
 
-      <CookieBanner visible={cookieBannerVisible} onDismiss={handleCookieDismiss} />
-    </div>
+        <LiveChatBubble
+          externalPrompt={chatExternalPrompt}
+          onConsumeExternalPrompt={handleConsumePrompt}
+          cookieBannerVisible={cookieBannerVisible}
+        />
+
+        <CookieBanner visible={cookieBannerVisible} onDismiss={handleCookieDismiss} />
+      </div>
+    </ErrorBoundary>
   );
 }

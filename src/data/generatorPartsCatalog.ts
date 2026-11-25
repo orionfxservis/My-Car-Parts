@@ -24,6 +24,7 @@ import { CarPromoBanner } from './carPartsCatalog';
 
 export interface GeneratorPartItem {
   id: string;
+  tab?: string;
   title: string;
   subsystem: string;
   image: string;

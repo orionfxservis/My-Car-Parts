@@ -1,21 +1,27 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Mail, MessageCircle, X } from 'lucide-react';
 import { CAR_PROMO_BANNERS, CarPromoBanner } from '../data/carPartsCatalog';
+import { resolveAssetUrl } from '../lib/cmsValidation';
 
 interface PromoBannerCarouselProps {
   theme?: 'light' | 'dark';
   banners?: CarPromoBanner[];
+  basePath?: '.' | '..';
 }
 
 export function PromoBannerCarousel({
   theme = 'light',
   banners = CAR_PROMO_BANNERS,
+  basePath = '..',
 }: PromoBannerCarouselProps) {
   const [selectedBanner, setSelectedBanner] = useState<CarPromoBanner | null>(null);
   const [activeBannerIndex, setActiveBannerIndex] = useState(0);
   const bannerTrackRef = useRef<HTMLDivElement | null>(null);
 
-  const bannerSlides = useMemo(() => [...banners, banners[0]], [banners]);
+  const bannerSlides = useMemo(
+    () => (banners.length > 0 ? [...banners, banners[0]] : []),
+    [banners],
+  );
 
   const getBannerStepWidth = () => {
     const track = bannerTrackRef.current;
@@ -29,6 +35,7 @@ export function PromoBannerCarousel({
   const scrollToBanner = useCallback(
     (targetIndex: number) => {
       const total = banners.length;
+      if (total === 0) return;
       const normalized = ((targetIndex % total) + total) % total;
       setActiveBannerIndex(normalized);
       const track = bannerTrackRef.current;
@@ -43,12 +50,16 @@ export function PromoBannerCarousel({
 
   const handleBannerScroll = useCallback(() => {
     const track = bannerTrackRef.current;
-    if (!track) return;
+    if (!track || banners.length === 0) return;
     const step = getBannerStepWidth();
     if (step <= 0) return;
     const idx = Math.round(track.scrollLeft / step) % banners.length;
     setActiveBannerIndex(idx);
   }, [banners.length]);
+
+  if (banners.length === 0) {
+    return null;
+  }
 
   const isDark = theme === 'dark';
 
@@ -81,7 +92,7 @@ export function PromoBannerCarousel({
               }`}
             >
               <img
-                src={banner.image}
+                src={resolveAssetUrl(banner.image, basePath)}
                 alt={banner.title}
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
@@ -158,7 +169,7 @@ export function PromoBannerCarousel({
           >
             <div className="relative h-44 w-full overflow-hidden">
               <img
-                src={selectedBanner.image}
+                src={resolveAssetUrl(selectedBanner.image, basePath)}
                 alt={selectedBanner.title}
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"

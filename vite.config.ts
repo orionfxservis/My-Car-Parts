@@ -14,6 +14,7 @@ export default defineConfig(() => {
           carParts: path.resolve(__dirname, 'pages/car-parts.html'),
           generatorParts: path.resolve(__dirname, 'pages/generator-parts.html'),
           heavyMachineryParts: path.resolve(__dirname, 'pages/heavy-machinery-parts.html'),
+          admin: path.resolve(__dirname, 'pages/admin.html'),
         },
       },
     },

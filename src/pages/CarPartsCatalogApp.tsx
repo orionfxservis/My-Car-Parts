@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import {
   BatteryCharging,
-  Bike,
+  Car,
   Cog,
   Droplets,
   Gauge,
@@ -14,15 +14,16 @@ import {
 } from 'lucide-react';
 import { CookieBanner, CookiePreferences } from '../components/CookieBanner';
 import { EnquiryModal } from '../components/EnquiryModal';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import { Footer } from '../components/Footer';
 import { Navbar } from '../components/Navbar';
 import { PromoBannerCarousel } from '../components/PromoBannerCarousel';
 import {
-  CAR_CATALOG_ITEMS,
-  CAR_CATALOG_TABS,
   CarCatalogTabId,
   CarSubCategoryItem,
 } from '../data/carPartsCatalog';
+import { resolveAssetUrl } from '../lib/cmsValidation';
+import { useCarPartsCms } from '../lib/useStorefrontCms';
 
 const COOKIE_STORAGE_KEY = 'my_car_parts_cookie_consent';
 
@@ -39,8 +40,6 @@ function renderCategoryIcon(iconKey: CarSubCategoryItem['iconKey']) {
       return <Sparkles className={iconClass} aria-hidden="true" />;
     case 'shield':
       return <ShieldCheck className={iconClass} aria-hidden="true" />;
-    case 'bike':
-      return <Bike className={iconClass} aria-hidden="true" />;
     case 'cog':
       return <Cog className={iconClass} aria-hidden="true" />;
     case 'wrench':
@@ -50,6 +49,9 @@ function renderCategoryIcon(iconKey: CarSubCategoryItem['iconKey']) {
 }
 
 export function CarPartsCatalogApp() {
+  const { banners, makes, items, groups } = useCarPartsCms();
+  const [activeMakeId, setActiveMakeId] = useState<string>(makes[0]?.id ?? 'toyota');
+  const [selectedCarName, setSelectedCarName] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<CarCatalogTabId>('car-parts');
   const [selectedItem, setSelectedItem] = useState<CarSubCategoryItem | null>(null);
   const [enquiryModalOpen, setEnquiryModalOpen] = useState(false);
@@ -62,9 +64,19 @@ export function CarPartsCatalogApp() {
     }
   });
 
+  const activeMake = useMemo(
+    () => makes.find((make) => make.id === activeMakeId) ?? makes[0],
+    [activeMakeId, makes],
+  );
+
+  const effectiveActiveTab = useMemo(
+    () => (groups.some((g) => g.id === activeTab) ? activeTab : groups[0]?.id ?? 'car-parts'),
+    [groups, activeTab],
+  );
+
   const visibleItems = useMemo(
-    () => CAR_CATALOG_ITEMS.filter((item) => item.tab === activeTab),
-    [activeTab],
+    () => items.filter((item) => item.tab === effectiveActiveTab),
+    [effectiveActiveTab, items],
   );
 
   const handleCookieDismiss = useCallback((prefs: CookiePreferences) => {
@@ -93,37 +105,142 @@ export function CarPartsCatalogApp() {
   };
 
   return (
-    <div id="top" className="min-h-screen flex flex-col bg-white text-slate-900">
-      <Navbar
-        basePath=".."
-        centerTitle="Car Spare Parts"
-        backToMainHref="../index.html"
-        quoteCount={0}
-        onSelectCategory={() => {}}
-        onOpenQuote={() => {}}
-        onOpenEnquiry={() => setEnquiryModalOpen(true)}
-      />
+    <ErrorBoundary>
+      <div id="top" className="min-h-screen flex flex-col bg-white text-slate-900">
+        <Navbar
+          basePath=".."
+          centerTitle="Car Spare Parts"
+          backToMainHref="../index.html"
+          quoteCount={0}
+          onSelectCategory={() => {}}
+          onOpenQuote={() => {}}
+          onOpenEnquiry={() => setEnquiryModalOpen(true)}
+        />
 
-      <main className="flex-1 bg-white">
-        <h1 className="sr-only">Car Spare Parts, Auto Parts &amp; Engine Components</h1>
+        <main className="flex-1 bg-white">
+          <h1 className="sr-only">Car Spare Parts, Auto Parts &amp; Engine Components</h1>
 
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-8 sm:py-10">
-          {/* Scrollable Service & Shipping Banners */}
+          <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-8 sm:py-10">
+            {/* Scrollable Service & Shipping Banners */}
+            <section
+              aria-label="Service and delivery highlights"
+              className="mb-9 sm:mb-11"
+            >
+              <PromoBannerCarousel theme="light" banners={banners} basePath=".." />
+            </section>
+
+          {/* Cars by Brand & Model Name (under banner, ndestore.com car lineup) */}
           <section
-            aria-label="Service and delivery highlights"
-            className="mb-10 sm:mb-12"
+            aria-label="Browse parts by car brand and model"
+            className="mb-9 sm:mb-11 bg-slate-50/70 border border-slate-200 rounded-lg p-5 sm:p-6"
           >
-            <PromoBannerCarousel theme="light" />
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div className="flex items-center gap-2.5">
+                <Car className="w-5 h-5 text-amber-600 shrink-0" aria-hidden="true" />
+                <h2 className="text-base sm:text-lg font-bold text-slate-950 tracking-tight">
+                  Shop by Car Name &amp; Model
+                </h2>
+              </div>
+
+              {selectedCarName ? (
+                <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                  <span className="text-slate-600">
+                    Selected:{' '}
+                    <strong className="text-slate-950 font-semibold">{selectedCarName}</strong>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setEnquiryModalOpen(true)}
+                    className="px-3 py-1.5 text-xs font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors cursor-pointer whitespace-nowrap"
+                  >
+                    Enquire for Car
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCarName(null)}
+                    className="px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-950 bg-white border border-slate-200 rounded-md transition-colors cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                </div>
+              ) : (
+                <p className="text-xs sm:text-sm text-slate-500">
+                  Choose a brand and car model to pre-fill vehicle fitment for any part below
+                </p>
+              )}
+            </div>
+
+            {/* Car Make / Brand Selector Row */}
+            <div
+              role="tablist"
+              aria-label="Car brands"
+              className="flex flex-wrap items-center gap-2 pb-4 border-b border-slate-200"
+            >
+              {makes.map((make) => {
+                const isActive = activeMake && make.id === activeMake.id;
+                return (
+                  <button
+                    key={make.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={Boolean(isActive)}
+                    onClick={() => setActiveMakeId(make.id)}
+                    className={`px-3 py-1.5 text-xs sm:text-[13px] font-semibold rounded-md border transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
+                      isActive
+                        ? 'bg-slate-900 text-white border-slate-900'
+                        : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:text-slate-950'
+                    }`}
+                  >
+                    {make.brand}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Car Models Grid for Active Brand */}
+            {activeMake && (
+              <div
+                role="tabpanel"
+                aria-label={`${activeMake.brand} car models`}
+                className="pt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5"
+              >
+                {activeMake.models.map((modelName) => {
+                  const fullName =
+                    activeMake.id === 'other-models' ||
+                    modelName.toLowerCase().startsWith(activeMake.brand.toLowerCase())
+                      ? modelName
+                      : `${activeMake.brand} ${modelName}`;
+                  const isSelected = selectedCarName === fullName;
+                  return (
+                    <button
+                      key={modelName}
+                      type="button"
+                      onClick={() =>
+                        setSelectedCarName((prev) => (prev === fullName ? null : fullName))
+                      }
+                      className={`px-3 py-2 text-left text-xs sm:text-[13px] font-medium rounded-md border transition-colors truncate cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
+                        isSelected
+                          ? 'bg-amber-500/15 border-amber-500 text-slate-950 font-semibold'
+                          : 'bg-white border-slate-200 text-slate-700 hover:border-amber-400 hover:text-slate-950'
+                      }`}
+                      title={fullName}
+                    >
+                      {fullName}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </section>
 
-          {/* Category Tabs matching reference */}
+          {/* Category Tabs (live from Admin Groups, fallback to Car parts, Oils and fluids, Accessories and equipment, Tools) */}
           <div
             role="tablist"
             aria-label="Automotive product groups"
             className="flex items-center gap-6 sm:gap-8 border-b border-slate-200 mb-7 overflow-x-auto"
           >
-            {CAR_CATALOG_TABS.map((tab) => {
-              const isActive = activeTab === tab.id;
+            {groups.map((tab) => {
+              const isActive = effectiveActiveTab === tab.id;
               return (
                 <button
                   key={tab.id}
@@ -146,7 +263,7 @@ export function CarPartsCatalogApp() {
           {/* 6-Column Subcategory Card Grid matching reference */}
           <div
             role="tabpanel"
-            aria-label={CAR_CATALOG_TABS.find((t) => t.id === activeTab)?.label}
+            aria-label={groups.find((t) => t.id === effectiveActiveTab)?.label}
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-5"
           >
             {visibleItems.map((item) => (
@@ -154,7 +271,7 @@ export function CarPartsCatalogApp() {
                 key={item.id}
                 type="button"
                 onClick={() => {
-                  setVehicleInput('');
+                  setVehicleInput(selectedCarName ?? '');
                   setSelectedItem(item);
                 }}
                 className="group bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md rounded-lg px-4 py-5 flex flex-col items-center justify-between gap-3.5 transition-all duration-150 hover:-translate-y-0.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284C7]"
@@ -162,7 +279,7 @@ export function CarPartsCatalogApp() {
                 <div className="w-full aspect-[4/3] flex items-center justify-center bg-white overflow-hidden">
                   {item.image ? (
                     <img
-                      src={item.image}
+                      src={resolveAssetUrl(item.image, '..')}
                       alt={item.title}
                       referrerPolicy="no-referrer"
                       className="max-h-full max-w-full object-contain transition-transform duration-200 group-hover:scale-[1.04]"
@@ -223,7 +340,7 @@ export function CarPartsCatalogApp() {
                 <div className="w-28 h-22 shrink-0 rounded-lg border border-slate-200 bg-white flex items-center justify-center p-2 overflow-hidden">
                   {selectedItem.image ? (
                     <img
-                      src={selectedItem.image}
+                      src={resolveAssetUrl(selectedItem.image, '..')}
                       alt={selectedItem.title}
                       referrerPolicy="no-referrer"
                       className="max-h-full max-w-full object-contain"
@@ -290,12 +407,13 @@ export function CarPartsCatalogApp() {
 
       <EnquiryModal
         open={enquiryModalOpen}
-        divisionTitle="Car Spare Parts"
+        divisionTitle={selectedCarName ? `Car Spare Parts — ${selectedCarName}` : 'Car Spare Parts'}
         placeholderHint="e.g. Toyota Corolla 2021 · Brake Pads · OEM code or VIN"
         onClose={() => setEnquiryModalOpen(false)}
       />
 
       <CookieBanner visible={cookieBannerVisible} onDismiss={handleCookieDismiss} />
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }

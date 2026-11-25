@@ -20,6 +20,7 @@ import torqueToolImg from '../assets/images/hero_heavy_machinery_1795209690346.j
 
 export interface MachineryPartItem {
   id: string;
+  tab?: string;
   title: string;
   subsystem: string;
   image: string;

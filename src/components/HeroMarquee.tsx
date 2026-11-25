@@ -1,43 +1,52 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { HERO_INVENTORY_SLIDES, HeroSlideItem } from '../data/inventory';
+import { DEFAULT_SITE_SECTIONS, SiteSectionData } from '../lib/cmsService';
+import { resolveAssetUrl } from '../lib/cmsValidation';
 import { SafeImage } from './SafeImage';
 
 interface HeroMarqueeProps {
   onExploreCatalog: () => void;
   onInspectSlide: (slide: HeroSlideItem) => void;
   onOpenSupport: () => void;
+  section?: SiteSectionData;
+  slides?: HeroSlideItem[];
 }
 
 export function HeroMarquee({
   onExploreCatalog,
   onInspectSlide,
   onOpenSupport,
+  section = DEFAULT_SITE_SECTIONS['main-hero'],
+  slides = HERO_INVENTORY_SLIDES,
 }: HeroMarqueeProps) {
   const [paused, setPaused] = useState(false);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
 
+  const safeSlides = slides.length > 0 ? slides : HERO_INVENTORY_SLIDES;
+  const boundedIndex = activeSlideIndex % safeSlides.length;
+
   // Automatic smooth crossfade dissolve across all HD inventory images
   useEffect(() => {
-    if (paused) return;
+    if (paused || safeSlides.length <= 1) return;
     const timer = window.setInterval(() => {
-      setActiveSlideIndex((prev) => (prev + 1) % HERO_INVENTORY_SLIDES.length);
+      setActiveSlideIndex((prev) => (prev + 1) % safeSlides.length);
     }, 4200);
     return () => window.clearInterval(timer);
-  }, [paused]);
+  }, [paused, safeSlides.length]);
 
-  const activeSlide = HERO_INVENTORY_SLIDES[activeSlideIndex];
+  const activeSlide = safeSlides[boundedIndex];
   // Duplicated seamlessly so translate3d(-50% -> 0%) scrolls smoothly left-to-right indefinitely
-  const duplicatedSlides = [...HERO_INVENTORY_SLIDES, ...HERO_INVENTORY_SLIDES];
+  const duplicatedSlides = [...safeSlides, ...safeSlides];
 
   const handlePrevSlide = () => {
     setActiveSlideIndex((prev) =>
-      prev === 0 ? HERO_INVENTORY_SLIDES.length - 1 : prev - 1,
+      prev === 0 ? safeSlides.length - 1 : prev - 1,
     );
   };
 
   const handleNextSlide = () => {
-    setActiveSlideIndex((prev) => (prev + 1) % HERO_INVENTORY_SLIDES.length);
+    setActiveSlideIndex((prev) => (prev + 1) % safeSlides.length);
   };
 
   return (
@@ -51,7 +60,7 @@ export function HeroMarquee({
           {/* Left Side: Company Proposition & CTAs */}
           <div className="lg:col-span-5 flex flex-col justify-center py-2 lg:py-6">
             <p className="text-xs sm:text-sm font-medium text-amber-400 tracking-wide mb-3">
-              Car Spare Parts Supplier · Industrial Generator Parts · Heavy Machinery Parts
+              {section.eyebrow}
             </p>
             <h1
               className="text-slate-50 font-bold tracking-tight leading-[1.08]"
@@ -60,14 +69,10 @@ export function HeroMarquee({
                 textWrap: 'balance',
               }}
             >
-              Car Spare Parts, Industrial Generator Parts &amp; Heavy Machinery Components
+              {section.heading}
             </h1>
             <p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl">
-              My Car Parts is your destination for quality Car Spare Parts, Industrial Generator
-              Spare Parts &amp; Heavy Machinery Parts. We help Vehicle Owners, Automotive
-              Workshops, Generator Maintenance Professionals, Equipment Operators &amp; Industrial
-              Businesses find the right components for repairs, servicing &amp; maintenance
-              requirements.
+              {section.description}
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -89,32 +94,25 @@ export function HeroMarquee({
             </div>
 
             <div className="mt-8 pt-6 border-t border-slate-800/80 grid grid-cols-3 gap-4">
-              <div>
-                <p className="font-mono tabular-nums text-lg sm:text-xl font-bold text-white">
-                  10–8,500 Nm
-                </p>
-                <p className="text-xs text-slate-400 mt-0.5">Torque Coverage</p>
-              </div>
-              <div>
-                <p className="font-mono tabular-nums text-lg sm:text-xl font-bold text-white">
-                  50–1,200 kW
-                </p>
-                <p className="text-xs text-slate-400 mt-0.5">Load Bank Testing</p>
-              </div>
-              <div>
-                <p className="font-mono tabular-nums text-lg sm:text-xl font-bold text-white">
-                  700 Bar
-                </p>
-                <p className="text-xs text-slate-400 mt-0.5">Hydraulic Force</p>
-              </div>
+              {(section.stats.length > 0
+                ? section.stats
+                : DEFAULT_SITE_SECTIONS['main-hero'].stats
+              ).map((stat, idx) => (
+                <div key={idx}>
+                  <p className="font-mono tabular-nums text-lg sm:text-xl font-bold text-white">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-slate-400 mt-0.5">{stat.label}</p>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* Right Side: HD Multi-Image Crossfade / Dissolving Showcase */}
           <div className="lg:col-span-7 flex">
             <div className="relative w-full aspect-[16/10] lg:aspect-auto lg:min-h-[460px] xl:min-h-[520px] rounded-xl overflow-hidden border-2 border-slate-700/80 hover:border-amber-500 transition-colors duration-200 bg-[#12161F]">
-              {HERO_INVENTORY_SLIDES.map((slide, index) => {
-                const isActive = index === activeSlideIndex;
+              {safeSlides.map((slide, index) => {
+                const isActive = index === boundedIndex;
                 return (
                   <div
                     key={slide.id}
@@ -124,7 +122,7 @@ export function HeroMarquee({
                     }`}
                   >
                     <SafeImage
-                      src={slide.image}
+                      src={resolveAssetUrl(slide.image, '.')}
                       alt={slide.title}
                       fallbackLabel={slide.title}
                       className="w-full h-full object-cover"
@@ -179,16 +177,16 @@ export function HeroMarquee({
 
                 <div className="flex items-center gap-3 shrink-0">
                   <div className="flex items-center gap-1.5" role="tablist" aria-label="Hero image slides">
-                    {HERO_INVENTORY_SLIDES.map((slide, idx) => (
+                    {safeSlides.map((slide, idx) => (
                       <button
                         key={slide.id}
                         type="button"
                         role="tab"
-                        aria-selected={idx === activeSlideIndex}
+                        aria-selected={idx === boundedIndex}
                         aria-label={`Show ${slide.title}`}
                         onClick={() => setActiveSlideIndex(idx)}
                         className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                          idx === activeSlideIndex
+                          idx === boundedIndex
                             ? 'w-6 bg-amber-400'
                             : 'w-2.5 bg-white/35 hover:bg-white/60'
                         }`}
@@ -257,7 +255,7 @@ export function HeroMarquee({
               >
                 <div className="aspect-[16/9] w-full overflow-hidden bg-slate-900">
                   <SafeImage
-                    src={slide.image}
+                    src={resolveAssetUrl(slide.image, '.')}
                     alt={slide.title}
                     fallbackLabel={slide.title}
                     className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
@@ -287,19 +285,11 @@ export function HeroMarquee({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
           <div className="lg:col-span-8">
             <h2 className="text-lg sm:text-xl font-bold text-slate-50 tracking-tight">
-              Trusted Supply for Automotive Workshops, Power Generation &amp; Construction Fleets
+              {section.secondaryHeading}
             </h2>
             <p className="mt-2.5 text-sm sm:text-base text-slate-300 leading-relaxed">
-              As a dedicated auto parts supplier and industrial distributor,{' '}
-              <span className="text-white font-medium">My Car Parts</span> supplies dependable car
-              spare parts—including engine spare parts, brake pads and filters, and car suspension
-              parts for Toyota, Honda, and Suzuki vehicles—alongside diesel generator parts,
-              alternator and governor assemblies, and generator maintenance parts for Perkins and
-              Cummins units. We also support civil contractors and quarry operators with heavy
-              machinery spare parts, hydraulic spare parts, and service equipment for Caterpillar,
-              Komatsu, and JCB machines. Whether you manage a commercial repair bay, a standby
-              power room, or an active earthmoving fleet, you can inspect product specs below, add
-              items to your quote list, or enquire directly via Live Support,{' '}
+              {section.secondaryText}{' '}
+              Enquire directly via Live Support,{' '}
               <a
                 href="mailto:sales@mycarparts.pk"
                 className="text-amber-400 hover:text-amber-300 underline underline-offset-2"
@@ -320,19 +310,18 @@ export function HeroMarquee({
           </div>
 
           <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 text-xs sm:text-sm">
-            <div className="bg-[#1B212C] border border-slate-800 rounded-lg px-4 py-3">
-              <p className="font-semibold text-amber-400">1. Browse Online Stock</p>
-              <p className="text-slate-300 mt-0.5">
-                Filter car parts, generator parts, and machinery equipment by category or SKU.
-              </p>
-            </div>
-            <div className="bg-[#1B212C] border border-slate-800 rounded-lg px-4 py-3">
-              <p className="font-semibold text-amber-400">2. Request Availability</p>
-              <p className="text-slate-300 mt-0.5">
-                Add required items to your quote basket or share your vehicle, genset, or machine
-                model number.
-              </p>
-            </div>
+            {(section.items.length > 0
+              ? section.items
+              : DEFAULT_SITE_SECTIONS['main-hero'].items
+            ).map((step) => (
+              <div
+                key={step.id}
+                className="bg-[#1B212C] border border-slate-800 rounded-lg px-4 py-3"
+              >
+                <p className="font-semibold text-amber-400">{step.title}</p>
+                <p className="text-slate-300 mt-0.5">{step.summary}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
