@@ -88,8 +88,19 @@ export function useFirebaseAuth(): FirebaseAuthState {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Google sign-in failed.';
-      setAuthError(msg);
+      const code =
+        typeof err === 'object' && err !== null && 'code' in err
+          ? String((err as { code?: unknown }).code)
+          : '';
+      const rawMsg = err instanceof Error ? err.message : 'Google sign-in failed.';
+      if (code === 'auth/unauthorized-domain' || rawMsg.includes('auth/unauthorized-domain')) {
+        const host = typeof window !== 'undefined' ? window.location.hostname : 'this domain';
+        setAuthError(
+          `Domain "${host}" is not authorized for Firebase sign-in yet. Add "${host}" in Firebase Console → Authentication → Settings → Authorized domains (project: gen-lang-client-0658779700).`,
+        );
+      } else {
+        setAuthError(rawMsg);
+      }
     }
   }, []);
 
