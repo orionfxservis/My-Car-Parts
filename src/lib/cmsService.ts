@@ -43,7 +43,7 @@ import {
   MACHINERY_PARTS_CATALOG,
   MachineryPartItem,
 } from '../data/machineryPartsCatalog';
-import { CMS_LIMITS, clampString, sanitizeId } from './cmsValidation';
+import { CMS_LIMITS, clampString, sanitizeId, sanitizeUid } from './cmsValidation';
 import { OperationType, auth, db, handleFirestoreError } from './firebase';
 
 export type CmsPageId = 'main' | 'cars' | 'generators' | 'machinery';
@@ -1558,7 +1558,7 @@ export async function fetchAdminsList(): Promise<AdminUserRecord[]> {
 
 export async function addAdminUid(targetUid: string): Promise<void> {
   const uid = requireAdminUid();
-  const cleanId = sanitizeId(targetUid, '');
+  const cleanId = sanitizeUid(targetUid);
   if (!cleanId) {
     throw new Error('Please enter a valid Firebase User UID (alphanumeric, -, _).');
   }
@@ -1577,7 +1577,8 @@ export async function addAdminUid(targetUid: string): Promise<void> {
 
 export async function removeAdminUid(targetUid: string): Promise<void> {
   requireAdminUid();
-  const cleanId = sanitizeId(targetUid, '');
+  const cleanId = sanitizeUid(targetUid);
+  if (!cleanId) return;
   const path = `admins/${cleanId}`;
   try {
     await deleteDoc(doc(db, 'admins', cleanId));

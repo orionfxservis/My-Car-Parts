@@ -36,6 +36,15 @@ export function sanitizeId(raw: string, fallback = 'item'): string {
   return cleaned && CMS_LIMITS.ID_PATTERN.test(cleaned) ? cleaned : fallback;
 }
 
+/**
+ * Firebase Auth UIDs are case-sensitive; validate against ID_PATTERN without lowercasing.
+ */
+export function sanitizeUid(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed || trimmed.length > CMS_LIMITS.ID_MAX) return '';
+  return CMS_LIMITS.ID_PATTERN.test(trimmed) ? trimmed : '';
+}
+
 export function clampString(value: string, maxLength: number): string {
   return value.trim().slice(0, maxLength);
 }

@@ -6,6 +6,7 @@ import {
   Check,
   CheckCheck,
   Cog,
+  Copy,
   ExternalLink,
   HardHat,
   Home,
@@ -85,6 +86,7 @@ function AdminPanelWorkspace() {
   const [adminUsers, setAdminUsers] = useState<AdminUserRecord[]>([]);
   const [newAdminUid, setNewAdminUid] = useState('');
   const [adminMsg, setAdminMsg] = useState('');
+  const [uidCopied, setUidCopied] = useState(false);
 
   // Technical inquiry notifications (New Inquiry Mail)
   const [inquiries, setInquiries] = useState<TechnicalInquiryRecord[]>([]);
@@ -239,17 +241,53 @@ function AdminPanelWorkspace() {
 
   // 3. Unauthorized Email Gate
   if (!isAdmin) {
+    const handleCopyUid = async () => {
+      try {
+        await navigator.clipboard.writeText(user.uid);
+        setUidCopied(true);
+        window.setTimeout(() => setUidCopied(false), 2000);
+      } catch {
+        setUidCopied(false);
+      }
+    };
+
     return (
       <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-xl p-8 text-center space-y-5">
           <Lock className="w-10 h-10 text-red-500 mx-auto" aria-hidden="true" />
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <h1 className="text-lg font-bold text-slate-950">Admin Authorization Required</h1>
             <p className="text-xs sm:text-sm text-slate-600">
-              Signed in as <strong className="text-slate-900">{user.email}</strong> (UID:{' '}
-              <span className="font-mono text-xs">{user.uid}</span>), which does not have admin
-              edit permissions.
+              Signed in as <strong className="text-slate-900">{user.email}</strong>, which does not
+              have admin edit permissions yet.
             </p>
+            <div className="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between gap-2 text-left">
+              <div className="min-w-0">
+                <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                  Firebase UID (Case-Sensitive)
+                </span>
+                <span className="block font-mono text-xs text-slate-900 truncate select-all">
+                  {user.uid}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyUid}
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold text-slate-800 bg-white hover:bg-slate-100 border border-slate-300 rounded cursor-pointer shrink-0"
+              >
+                {uidCopied ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
+                    <span>Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Copy UID</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-2.5">
             <button
