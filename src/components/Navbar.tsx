@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Menu, X } from 'lucide-react';
+import { Mail, Menu, ShoppingBag, X } from 'lucide-react';
 import { ToolCategory } from '../data/inventory';
 
 interface NavbarProps {
@@ -7,6 +7,8 @@ interface NavbarProps {
   onSelectCategory?: (category: ToolCategory) => void;
   onOpenQuote: () => void;
   onOpenEnquiry?: () => void;
+  cartCount?: number;
+  onOpenCart?: () => void;
   basePath?: string;
   activeCategory?: ToolCategory;
   centerTitle?: string;
@@ -17,6 +19,8 @@ export function Navbar({
   quoteCount,
   onOpenQuote,
   onOpenEnquiry,
+  cartCount = 0,
+  onOpenCart,
   basePath = '.',
   activeCategory,
   centerTitle,
@@ -124,6 +128,16 @@ export function Navbar({
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {backToMainHref ? (
             <>
+              {onOpenCart && (
+                <button
+                  type="button"
+                  onClick={onOpenCart}
+                  className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-2 text-xs sm:text-sm font-semibold text-white bg-[#171C26] hover:bg-slate-800 border border-slate-700 hover:border-amber-500 rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer tabular-nums"
+                >
+                  <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" aria-hidden="true" />
+                  <span>{cartCount > 0 ? `Cart (${cartCount})` : 'Cart'}</span>
+                </button>
+              )}
               {onOpenEnquiry ? (
                 <button
                   type="button"

@@ -24,6 +24,12 @@ export const CMS_LIMITS = {
   INQUIRY_PART_MAX: 180,
   INQUIRY_SKU_MAX: 80,
   INQUIRY_DETAILS_MAX: 2000,
+  AVAILABILITY_MAX: 40,
+  COMPATIBILITY_MAX: 400,
+  WARRANTY_MAX: 200,
+  GALLERY_IMAGES_MAX_COUNT: 10,
+  GALLERY_IMAGE_MAX: 72000,
+  GALLERY_TOTAL_CHARS_MAX: 850000,
 } as const;
 
 export function sanitizeId(raw: string, fallback = 'item'): string {

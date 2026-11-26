@@ -7,6 +7,7 @@ import {
   Save,
   Search,
   Trash2,
+  Upload,
   X,
 } from 'lucide-react';
 import {
@@ -34,7 +35,9 @@ import {
   saveSiteSection,
 } from '../../lib/cmsService';
 import { resolveAssetUrl, sanitizeId } from '../../lib/cmsValidation';
+import { AdminBulkUploadModal } from './AdminBulkUploadModal';
 import { ImageFieldEditor } from './ImageFieldEditor';
+import { ProductGalleryEditor } from './ProductGalleryEditor';
 
 interface AdminCatalogPageManagerProps {
   page: 'cars' | 'generators' | 'machinery';
@@ -71,6 +74,7 @@ export function AdminCatalogPageManager({
 
   // Editable modals / drafts
   const [editingProduct, setEditingProduct] = useState<CatalogProductData | null>(null);
+  const [bulkUploadOpen, setBulkUploadOpen] = useState(false);
   const [addGroupModalOpen, setAddGroupModalOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [deletingGroup, setDeletingGroup] = useState<CarCatalogTab | null>(null);
@@ -386,6 +390,14 @@ export function AdminCatalogPageManager({
               </button>
               <button
                 type="button"
+                onClick={() => setBulkUploadOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-md transition-colors cursor-pointer"
+              >
+                <Upload className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Bulk Upload (10+)</span>
+              </button>
+              <button
+                type="button"
                 onClick={() =>
                   setEditingProduct({
                     id: `${page}-item-${Date.now()}`,
@@ -404,9 +416,16 @@ export function AdminCatalogPageManager({
                         : pageGroups[0]?.id || (page === 'cars' ? 'car-parts' : 'catalog'),
                     iconKey: 'wrench',
                     image: '',
+                    images: [],
                     cover: false,
                     summary: '',
                     components: ['Genuine / OEM specification spare part'],
+                    brand: '',
+                    sku: '',
+                    price: 0,
+                    availability: 'In Stock',
+                    compatibility: '',
+                    warranty: 'OEM Fitment Verified · 30-Day Return Policy',
                   })
                 }
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md cursor-pointer"
@@ -524,7 +543,7 @@ export function AdminCatalogPageManager({
                   className="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col justify-between hover:border-slate-300 transition-colors"
                 >
                   <div>
-                    <div className="aspect-[4/3] bg-slate-50 border-b border-slate-100 flex items-center justify-center overflow-hidden p-2">
+                    <div className="relative aspect-[4/3] bg-slate-50 border-b border-slate-100 flex items-center justify-center overflow-hidden p-2">
                       {imgUrl ? (
                         <img
                           src={imgUrl}
@@ -540,6 +559,19 @@ export function AdminCatalogPageManager({
                           Icon Card ({item.iconKey || 'wrench'})
                         </span>
                       )}
+                      {(() => {
+                        const count =
+                          item.images && item.images.length > 0
+                            ? item.images.length
+                            : imgUrl
+                              ? 1
+                              : 0;
+                        return count > 1 ? (
+                          <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-slate-900/80 text-white text-[10px] font-mono tabular-nums">
+                            {count} / 10 Photos
+                          </span>
+                        ) : null;
+                      })()}
                     </div>
                     <div className="p-4 space-y-1.5">
                       <p className="text-[11px] font-semibold text-amber-700 truncate">
@@ -878,10 +910,16 @@ export function AdminCatalogPageManager({
             </div>
 
             <div className="p-6 space-y-4">
-              <ImageFieldEditor
-                label="Product Card Image"
-                value={editingProduct.image}
-                onChange={(img) => setEditingProduct({ ...editingProduct, image: img })}
+              <ProductGalleryEditor
+                primaryImage={editingProduct.image}
+                images={editingProduct.images || []}
+                onChange={(nextPrimary, nextGallery) =>
+                  setEditingProduct({
+                    ...editingProduct,
+                    image: nextPrimary,
+                    images: nextGallery,
+                  })
+                }
               />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -953,6 +991,86 @@ export function AdminCatalogPageManager({
                 </div>
               )}
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">
+                    Brand / Quality
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.brand || ''}
+                    onChange={(e) =>
+                      setEditingProduct({ ...editingProduct, brand: e.target.value })
+                    }
+                    placeholder="e.g. DENSO / OEM"
+                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-md focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">
+                    SKU / Part Code
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.sku || ''}
+                    onChange={(e) =>
+                      setEditingProduct({ ...editingProduct, sku: e.target.value })
+                    }
+                    placeholder="e.g. DA-17801"
+                    className="w-full px-3 py-2 text-xs font-mono border border-slate-300 rounded-md focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">
+                    Price (Rs / PKR)
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={editingProduct.price ?? 0}
+                    onChange={(e) =>
+                      setEditingProduct({
+                        ...editingProduct,
+                        price: Math.max(0, Number(e.target.value) || 0),
+                      })
+                    }
+                    placeholder="0 = Quote"
+                    className="w-full px-3 py-2 text-xs font-mono border border-slate-300 rounded-md focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">
+                    Availability
+                  </label>
+                  <select
+                    value={editingProduct.availability || 'In Stock'}
+                    onChange={(e) =>
+                      setEditingProduct({ ...editingProduct, availability: e.target.value })
+                    }
+                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-md bg-white focus:outline-none focus:border-amber-500"
+                  >
+                    <option value="In Stock">In Stock</option>
+                    <option value="Built to Order">Built to Order</option>
+                    <option value="On Order">On Order</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
+                  Vehicle Compatibility / Application (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={editingProduct.compatibility || ''}
+                  onChange={(e) =>
+                    setEditingProduct({ ...editingProduct, compatibility: e.target.value })
+                  }
+                  placeholder="e.g. Toyota Corolla 2008–2026 XLi / GLi / Altis / Grande"
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-md focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
               <div>
                 <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Product Description *
@@ -970,7 +1088,7 @@ export function AdminCatalogPageManager({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-800 mb-1">
-                  Available Components (one per line, max 15)
+                  Available Components / Key Features (one per line, max 15)
                 </label>
                 <textarea
                   rows={4}
@@ -981,6 +1099,21 @@ export function AdminCatalogPageManager({
                       components: e.target.value.split('\n'),
                     })
                   }
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-md focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
+                  Warranty / Return Note (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={editingProduct.warranty || ''}
+                  onChange={(e) =>
+                    setEditingProduct({ ...editingProduct, warranty: e.target.value })
+                  }
+                  placeholder="e.g. OEM Fitment Verified · 30-Day Return Policy"
                   className="w-full px-3 py-2 text-xs border border-slate-300 rounded-md focus:outline-none focus:border-amber-500"
                 />
               </div>
@@ -1361,6 +1494,23 @@ export function AdminCatalogPageManager({
           </div>
         </div>
       )}
+
+      {/* BULK UPLOAD PRODUCTS MODAL (MIN 10 EXPANDABLE SLOTS) */}
+      <AdminBulkUploadModal
+        open={bulkUploadOpen}
+        page={page}
+        groups={pageGroups}
+        defaultGroupId={
+          groupFilter !== 'all' ? groupFilter : pageGroups[0]?.id || 'car-parts'
+        }
+        existingProducts={products}
+        onClose={() => setBulkUploadOpen(false)}
+        onSuccess={async (uploadedCount) => {
+          setBulkUploadOpen(false);
+          await onRefresh();
+          notify(`Uploaded ${uploadedCount} product card${uploadedCount === 1 ? '' : 's'}.`);
+        }}
+      />
     </div>
   );
 }

@@ -37,6 +37,7 @@ export interface CarSubCategoryItem {
   tab: CarCatalogTabId;
   title: string;
   image?: string;
+  images?: string[];
   iconKey?:
     | 'droplets'
     | 'gauge'
@@ -47,6 +48,12 @@ export interface CarSubCategoryItem {
     | 'cog';
   summary: string;
   components: string[];
+  brand?: string;
+  sku?: string;
+  price?: number;
+  availability?: string;
+  compatibility?: string;
+  warranty?: string;
 }
 
 export const CAR_CATALOG_TABS: CarCatalogTab[] = [

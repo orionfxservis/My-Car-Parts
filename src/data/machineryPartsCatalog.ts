@@ -24,6 +24,7 @@ export interface MachineryPartItem {
   title: string;
   subsystem: string;
   image: string;
+  images?: string[];
   cover?: boolean;
   summary: string;
   components: string[];

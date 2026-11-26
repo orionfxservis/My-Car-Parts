@@ -28,6 +28,7 @@ import {
 } from '../data/machineryPartsCatalog';
 import {
   CatalogProductData,
+  DEFAULT_ADMIN_MOBILE_NO,
   DEFAULT_PAGE_GROUPS,
   DEFAULT_SITE_SECTIONS,
   SiteSectionData,
@@ -87,21 +88,27 @@ export function useCarPartsCms() {
   const [makes, setMakes] = useState<CarMakeEntry[]>(CAR_MAKES_DIRECTORY);
   const [items, setItems] = useState<CarSubCategoryItem[]>(CAR_CATALOG_ITEMS);
   const [groups, setGroups] = useState<CarCatalogTab[]>(CAR_CATALOG_TABS);
+  const [adminMobileNo, setAdminMobileNo] = useState<string>(DEFAULT_ADMIN_MOBILE_NO);
   const [loading, setLoading] = useState(true);
 
   const reload = useCallback(async () => {
     setLoading(true);
     try {
-      const [liveBanners, liveMakes, liveProducts, liveGroups] = await Promise.all([
+      const [liveBanners, liveMakes, liveProducts, liveGroups, liveSections] = await Promise.all([
         fetchPromoBanners('cars'),
         fetchCarMakes(),
         fetchCatalogProducts('cars'),
         fetchCarGroups(),
+        fetchSiteSections(),
       ]);
       setBanners(liveBanners);
       setMakes(liveMakes);
       setItems(liveProducts.map(catalogProductToCarItem));
       setGroups(liveGroups);
+      const configuredMobile = liveSections['main-support']?.secondaryHeading?.trim();
+      if (configuredMobile) {
+        setAdminMobileNo(configuredMobile);
+      }
     } catch {
       // Retain defaults gracefully
     } finally {
@@ -113,7 +120,7 @@ export function useCarPartsCms() {
     void reload();
   }, [reload]);
 
-  return { banners, makes, items, groups, loading, reload };
+  return { banners, makes, items, groups, adminMobileNo, loading, reload };
 }
 
 export function useGeneratorPartsCms() {

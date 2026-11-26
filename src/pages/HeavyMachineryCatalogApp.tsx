@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Mail, MessageCircle, X } from 'lucide-react';
+import { MouseEvent, useCallback, useMemo, useState } from 'react';
+import { ChevronLeft, ChevronRight, Mail, MessageCircle, X, ZoomIn } from 'lucide-react';
 import { CookieBanner, CookiePreferences } from '../components/CookieBanner';
 import { EnquiryModal } from '../components/EnquiryModal';
 import { ErrorBoundary } from '../components/ErrorBoundary';
@@ -19,6 +19,9 @@ export function HeavyMachineryCatalogApp() {
   const [activeGroup, setActiveGroup] = useState<string>('all');
   const [startIndex, setStartIndex] = useState(0);
   const [selectedItem, setSelectedItem] = useState<MachineryPartItem | null>(null);
+  const [activeImageIdx, setActiveImageIdx] = useState(0);
+  const [isHoverZooming, setIsHoverZooming] = useState(false);
+  const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
   const [enquiryModalOpen, setEnquiryModalOpen] = useState(false);
   const [machineInput, setMachineInput] = useState('');
   const [cookieBannerVisible, setCookieBannerVisible] = useState<boolean>(() => {
@@ -221,39 +224,54 @@ export function HeavyMachineryCatalogApp() {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {visibleItems.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => {
-                      setMachineInput('');
-                      setSelectedItem(item);
-                    }}
-                    className="group bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md rounded-lg px-5 py-6 flex flex-col items-center justify-between gap-4 transition-all duration-150 hover:-translate-y-0.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284C7]"
-                  >
-                    <div className="w-full aspect-[4/3] flex items-center justify-center bg-white overflow-hidden rounded-md">
-                      <img
-                        src={resolveAssetUrl(item.image, '..')}
-                        alt={item.title}
-                        referrerPolicy="no-referrer"
-                        className={
-                          item.cover
-                            ? 'w-full h-full object-cover transition-transform duration-200 group-hover:scale-[1.04]'
-                            : 'max-h-full max-w-full object-contain transition-transform duration-200 group-hover:scale-[1.04]'
-                        }
-                      />
-                    </div>
+                {visibleItems.map((item) => {
+                  const photoCount =
+                    item.images && item.images.length > 0 ? item.images.length : item.image ? 1 : 0;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        setMachineInput('');
+                        setActiveImageIdx(0);
+                        setIsHoverZooming(false);
+                        setSelectedItem(item);
+                      }}
+                      className="group bg-white border border-slate-200 hover:border-amber-500/70 hover:shadow-md rounded-lg px-5 py-6 flex flex-col items-center justify-between gap-4 transition-all duration-150 hover:-translate-y-0.5 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284C7]"
+                    >
+                      <div className="relative w-full aspect-[4/3] flex items-center justify-center bg-white overflow-hidden rounded-md">
+                        <img
+                          src={resolveAssetUrl(item.image, '..')}
+                          alt={item.title}
+                          referrerPolicy="no-referrer"
+                          className={
+                            item.cover
+                              ? 'w-full h-full object-cover transition-transform duration-200 ease-out group-hover:scale-125'
+                              : 'max-h-full max-w-full object-contain transition-transform duration-200 ease-out group-hover:scale-125'
+                          }
+                        />
+                        <span className="pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150 absolute top-1.5 right-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-900/75 text-white text-[10px] font-medium">
+                          <ZoomIn className="w-3 h-3 text-amber-400" aria-hidden="true" />
+                          <span>Zoom</span>
+                        </span>
+                      </div>
 
-                    <div className="text-center space-y-1">
-                      <span className="block text-sm sm:text-[15px] font-semibold text-slate-900 group-hover:text-slate-950 leading-snug">
-                        {item.title}
-                      </span>
-                      <span className="block text-xs text-slate-500">
-                        {item.subsystem}
-                      </span>
-                    </div>
-                  </button>
-                ))}
+                      <div className="text-center space-y-1">
+                        <span className="block text-sm sm:text-[15px] font-semibold text-slate-900 group-hover:text-slate-950 leading-snug">
+                          {item.title}
+                        </span>
+                        <span className="block text-xs text-slate-500">
+                          {item.subsystem}
+                        </span>
+                        {photoCount > 1 && (
+                          <span className="block text-[10px] text-slate-500 font-mono tabular-nums">
+                            {photoCount} Photos
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             )}
 
@@ -336,24 +354,80 @@ export function HeavyMachineryCatalogApp() {
               </button>
             </div>
 
-            <div className="p-6 space-y-5">
-              <div className="flex items-center gap-5">
-                <div className="w-28 h-22 shrink-0 rounded-lg border border-slate-200 bg-white flex items-center justify-center p-2 overflow-hidden">
-                  <img
-                    src={resolveAssetUrl(selectedItem.image, '..')}
-                    alt={selectedItem.title}
-                    referrerPolicy="no-referrer"
-                    className={
-                      selectedItem.cover
-                        ? 'w-full h-full object-cover rounded'
-                        : 'max-h-full max-w-full object-contain'
-                    }
-                  />
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {selectedItem.summary}
-                </p>
-              </div>
+            <div className="p-6 space-y-5 max-h-[82vh] overflow-y-auto">
+              {(() => {
+                const gallery =
+                  selectedItem.images && selectedItem.images.length > 0
+                    ? selectedItem.images.slice(0, 10)
+                    : selectedItem.image
+                      ? [selectedItem.image]
+                      : [];
+                const safeIdx = Math.min(activeImageIdx, Math.max(0, gallery.length - 1));
+                const activeSrc = gallery[safeIdx] ? resolveAssetUrl(gallery[safeIdx], '..') : '';
+                const handleZoomMove = (e: MouseEvent<HTMLDivElement>) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  if (!rect.width || !rect.height) return;
+                  const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                  const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+                  setZoomOrigin({ x, y });
+                };
+                return (
+                  <div className="space-y-3">
+                    <div
+                      onMouseEnter={() => activeSrc && setIsHoverZooming(true)}
+                      onMouseMove={handleZoomMove}
+                      onMouseLeave={() => setIsHoverZooming(false)}
+                      className="relative aspect-[16/10] w-full rounded-lg border border-slate-200 bg-white flex items-center justify-center p-3 overflow-hidden cursor-zoom-in"
+                    >
+                      {activeSrc && (
+                        <>
+                          <img
+                            src={activeSrc}
+                            alt={selectedItem.title}
+                            referrerPolicy="no-referrer"
+                            style={{
+                              transform: isHoverZooming ? 'scale(2.25)' : 'scale(1)',
+                              transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
+                            }}
+                            className="max-h-full max-w-full object-contain transition-transform duration-150 ease-out will-change-transform select-none"
+                          />
+                          <span className="pointer-events-none absolute bottom-2 right-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-900/75 text-white text-[10px] font-medium">
+                            <ZoomIn className="w-3 h-3 text-amber-400" aria-hidden="true" />
+                            <span>{isHoverZooming ? 'Zoomed' : 'Hover to Zoom'}</span>
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    {gallery.length > 1 && (
+                      <div className="grid grid-cols-5 gap-1.5">
+                        {gallery.map((thumb, idx) => (
+                          <button
+                            key={`${idx}-${thumb.slice(0, 20)}`}
+                            type="button"
+                            onClick={() => setActiveImageIdx(idx)}
+                            onMouseEnter={() => setActiveImageIdx(idx)}
+                            className={`aspect-[4/3] rounded border bg-white p-1 flex items-center justify-center overflow-hidden cursor-zoom-in ${
+                              idx === safeIdx
+                                ? 'border-amber-500 ring-2 ring-amber-400/35'
+                                : 'border-slate-200 hover:border-slate-400'
+                            }`}
+                          >
+                            <img
+                              src={resolveAssetUrl(thumb, '..')}
+                              alt={`${selectedItem.title} view ${idx + 1}`}
+                              referrerPolicy="no-referrer"
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      {selectedItem.summary}
+                    </p>
+                  </div>
+                );
+              })()}
 
               <div>
                 <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">

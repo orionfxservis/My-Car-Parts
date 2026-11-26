@@ -205,7 +205,9 @@ service cloud.firestore {
         ]) &&
         data.keys().hasOnly([
           'id', 'page', 'sortOrder', 'title', 'subsystem', 'tab', 'iconKey',
-          'image', 'cover', 'summary', 'components', 'updatedBy', 'createdAt', 'updatedAt'
+          'image', 'images', 'cover', 'summary', 'components',
+          'brand', 'sku', 'price', 'availability', 'compatibility', 'warranty',
+          'updatedBy', 'createdAt', 'updatedAt'
         ]) &&
         isValidId(data.id) &&
         data.page in ['cars', 'generators', 'machinery'] &&
@@ -215,9 +217,16 @@ service cloud.firestore {
         data.tab is string && data.tab.size() <= 60 &&
         data.iconKey is string && data.iconKey.size() <= 40 &&
         data.image is string && data.image.size() <= 350000 &&
+        (!('images' in data) || isValidStringList(data.images, 10)) &&
         data.cover is bool &&
         data.summary is string && data.summary.size() >= 1 && data.summary.size() <= 1200 &&
         isValidStringList(data.components, 15) &&
+        (!('brand' in data) || (data.brand is string && data.brand.size() <= 80)) &&
+        (!('sku' in data) || (data.sku is string && data.sku.size() <= 60)) &&
+        (!('price' in data) || (data.price is number && data.price >= 0 && data.price <= 10000000)) &&
+        (!('availability' in data) || (data.availability is string && data.availability.size() <= 40)) &&
+        (!('compatibility' in data) || (data.compatibility is string && data.compatibility.size() <= 400)) &&
+        (!('warranty' in data) || (data.warranty is string && data.warranty.size() <= 200)) &&
         data.updatedBy is string && data.updatedBy == request.auth.uid && data.updatedBy.size() <= 128 &&
         data.createdAt is timestamp &&
         data.updatedAt is timestamp;
@@ -408,7 +417,9 @@ service cloud.firestore {
         incoming().updatedAt == request.time &&
         incoming().diff(existing()).affectedKeys().hasOnly([
           'page', 'sortOrder', 'title', 'subsystem', 'tab', 'iconKey',
-          'image', 'cover', 'summary', 'components', 'updatedBy', 'updatedAt'
+          'image', 'images', 'cover', 'summary', 'components',
+          'brand', 'sku', 'price', 'availability', 'compatibility', 'warranty',
+          'updatedBy', 'updatedAt'
         ])
       );
       allow delete: if isSignedIn() && isValidId(productId) && isAdmin();

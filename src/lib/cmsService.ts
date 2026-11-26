@@ -84,9 +84,16 @@ export interface CatalogProductData {
   tab: string;
   iconKey: string;
   image: string;
+  images?: string[];
   cover: boolean;
   summary: string;
   components: string[];
+  brand?: string;
+  sku?: string;
+  price?: number;
+  availability?: string;
+  compatibility?: string;
+  warranty?: string;
 }
 
 export interface AdminUserRecord {
@@ -287,22 +294,38 @@ export function carItemToCatalogProduct(
     subsystem: '',
     tab: item.tab,
     iconKey: item.iconKey || 'wrench',
-    image: item.image || '',
+    image: item.image || item.images?.[0] || '',
+    images: item.images ? [...item.images].slice(0, CMS_LIMITS.GALLERY_IMAGES_MAX_COUNT) : [],
     cover: false,
     summary: item.summary,
     components: [...item.components],
+    brand: item.brand || '',
+    sku: item.sku || '',
+    price: typeof item.price === 'number' ? item.price : 0,
+    availability: item.availability || 'In Stock',
+    compatibility: item.compatibility || '',
+    warranty: item.warranty || '',
   };
 }
 
 export function catalogProductToCarItem(p: CatalogProductData): CarSubCategoryItem {
+  const gallery = Array.isArray(p.images) ? p.images.filter(Boolean) : [];
+  const mainImg = p.image || gallery[0] || undefined;
   return {
     id: p.id,
     tab: (p.tab as CarCatalogTabId) || 'car-parts',
     title: p.title,
-    image: p.image || undefined,
+    image: mainImg,
+    images: gallery.length > 0 ? gallery : mainImg ? [mainImg] : undefined,
     iconKey: (p.iconKey as CarSubCategoryItem['iconKey']) || 'wrench',
     summary: p.summary,
     components: p.components,
+    brand: p.brand || undefined,
+    sku: p.sku || undefined,
+    price: typeof p.price === 'number' && p.price > 0 ? p.price : undefined,
+    availability: p.availability || undefined,
+    compatibility: p.compatibility || undefined,
+    warranty: p.warranty || undefined,
   };
 }
 
@@ -318,7 +341,8 @@ export function generatorItemToCatalogProduct(
     subsystem: item.subsystem,
     tab: 'catalog',
     iconKey: 'cog',
-    image: item.image,
+    image: item.image || item.images?.[0] || '',
+    images: item.images ? [...item.images].slice(0, CMS_LIMITS.GALLERY_IMAGES_MAX_COUNT) : [],
     cover: Boolean(item.cover),
     summary: item.summary,
     components: [...item.components],
@@ -326,12 +350,15 @@ export function generatorItemToCatalogProduct(
 }
 
 export function catalogProductToGeneratorItem(p: CatalogProductData): GeneratorPartItem {
+  const gallery = Array.isArray(p.images) ? p.images.filter(Boolean) : [];
+  const mainImg = p.image || gallery[0] || '';
   return {
     id: p.id,
     tab: p.tab || 'catalog',
     title: p.title,
     subsystem: p.subsystem,
-    image: p.image,
+    image: mainImg,
+    images: gallery.length > 0 ? gallery : mainImg ? [mainImg] : undefined,
     cover: p.cover,
     summary: p.summary,
     components: p.components,
@@ -350,7 +377,8 @@ export function machineryItemToCatalogProduct(
     subsystem: item.subsystem,
     tab: 'catalog',
     iconKey: 'cog',
-    image: item.image,
+    image: item.image || item.images?.[0] || '',
+    images: item.images ? [...item.images].slice(0, CMS_LIMITS.GALLERY_IMAGES_MAX_COUNT) : [],
     cover: Boolean(item.cover),
     summary: item.summary,
     components: [...item.components],
@@ -358,12 +386,15 @@ export function machineryItemToCatalogProduct(
 }
 
 export function catalogProductToMachineryItem(p: CatalogProductData): MachineryPartItem {
+  const gallery = Array.isArray(p.images) ? p.images.filter(Boolean) : [];
+  const mainImg = p.image || gallery[0] || '';
   return {
     id: p.id,
     tab: p.tab || 'catalog',
     title: p.title,
     subsystem: p.subsystem,
-    image: p.image,
+    image: mainImg,
+    images: gallery.length > 0 ? gallery : mainImg ? [mainImg] : undefined,
     cover: p.cover,
     summary: p.summary,
     components: p.components,
@@ -648,9 +679,18 @@ export async function fetchCatalogProducts(
           tab: String(data.tab ?? 'catalog'),
           iconKey: String(data.iconKey ?? 'wrench'),
           image: String(data.image ?? ''),
+          images: Array.isArray(data.images)
+            ? (data.images as string[]).filter(Boolean).slice(0, CMS_LIMITS.GALLERY_IMAGES_MAX_COUNT)
+            : [],
           cover: Boolean(data.cover),
           summary: String(data.summary ?? ''),
           components: Array.isArray(data.components) ? (data.components as string[]) : [],
+          brand: String(data.brand ?? ''),
+          sku: String(data.sku ?? ''),
+          price: Number(data.price ?? 0),
+          availability: String(data.availability ?? 'In Stock'),
+          compatibility: String(data.compatibility ?? ''),
+          warranty: String(data.warranty ?? ''),
         };
       })
       .sort((a, b) => a.sortOrder - b.sortOrder);
@@ -1205,6 +1245,21 @@ export async function deleteCarMake(
 }
 
 function buildCatalogProductPayload(product: CatalogProductData, uid: string) {
+  const cleanGallery = (product.images || [])
+    .map((img) => clampString(img, CMS_LIMITS.IMAGE_MAX))
+    .filter(Boolean)
+    .slice(0, CMS_LIMITS.GALLERY_IMAGES_MAX_COUNT);
+  const primaryImage = clampString(
+    product.image || cleanGallery[0] || '',
+    CMS_LIMITS.IMAGE_MAX,
+  );
+  const normalizedGallery =
+    cleanGallery.length > 0
+      ? cleanGallery
+      : primaryImage
+        ? [primaryImage]
+        : [];
+
   return {
     id: sanitizeId(product.id, 'product'),
     page: product.page,
@@ -1213,13 +1268,20 @@ function buildCatalogProductPayload(product: CatalogProductData, uid: string) {
     subsystem: clampString(product.subsystem || '', CMS_LIMITS.SUBSYSTEM_MAX),
     tab: clampString(product.tab || 'catalog', 60),
     iconKey: clampString(product.iconKey || 'wrench', 40),
-    image: clampString(product.image || '', CMS_LIMITS.IMAGE_MAX),
+    image: primaryImage,
+    images: normalizedGallery,
     cover: Boolean(product.cover),
     summary: clampString(product.summary || 'Product description', CMS_LIMITS.SUMMARY_MAX),
     components: product.components
       .map((c) => clampString(c, 220))
       .filter(Boolean)
       .slice(0, CMS_LIMITS.COMPONENTS_MAX_COUNT),
+    brand: clampString(product.brand || '', CMS_LIMITS.BRAND_MAX),
+    sku: clampString(product.sku || '', CMS_LIMITS.SKU_MAX),
+    price: Math.max(0, Math.min(10000000, Number(product.price) || 0)),
+    availability: clampString(product.availability || 'In Stock', CMS_LIMITS.AVAILABILITY_MAX),
+    compatibility: clampString(product.compatibility || '', CMS_LIMITS.COMPATIBILITY_MAX),
+    warranty: clampString(product.warranty || '', CMS_LIMITS.WARRANTY_MAX),
     updatedBy: uid,
   };
 }
@@ -1269,15 +1331,69 @@ export async function saveCatalogProduct(
         tab: p.tab,
         iconKey: p.iconKey,
         image: p.image,
+        images: p.images,
         cover: p.cover,
         summary: p.summary,
         components: p.components,
+        brand: p.brand,
+        sku: p.sku,
+        price: p.price,
+        availability: p.availability,
+        compatibility: p.compatibility,
+        warranty: p.warranty,
         updatedBy: p.updatedBy,
         updatedAt: serverTimestamp(),
       });
     }
   } catch (err) {
     handleFirestoreError(err, OperationType.WRITE, `${path}/${product.id}`);
+  }
+}
+
+export async function saveBulkCatalogProducts(
+  page: 'cars' | 'generators' | 'machinery',
+  newProducts: CatalogProductData[],
+  currentProducts: CatalogProductData[],
+): Promise<number> {
+  const uid = requireAdminUid();
+  const path = 'catalog_products';
+  if (newProducts.length === 0) return 0;
+
+  try {
+    const existingSnap = await getDocs(
+      query(collection(db, path), where('page', '==', page)),
+    );
+
+    const itemsToWrite: CatalogProductData[] = [];
+    if (existingSnap.empty) {
+      currentProducts.forEach((item, idx) => {
+        itemsToWrite.push({ ...item, sortOrder: idx });
+      });
+    }
+
+    const baseOffset = existingSnap.empty ? currentProducts.length : existingSnap.size;
+    newProducts.forEach((item, idx) => {
+      itemsToWrite.push({ ...item, page, sortOrder: baseOffset + idx });
+    });
+
+    // Write in chunks of 350 to stay well within Firestore batch limits
+    for (let i = 0; i < itemsToWrite.length; i += 350) {
+      const batch = writeBatch(db);
+      const chunk = itemsToWrite.slice(i, i + 350);
+      chunk.forEach((item) => {
+        const p = buildCatalogProductPayload(item, uid);
+        batch.set(doc(db, path, p.id), {
+          ...p,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+      });
+      await batch.commit();
+    }
+
+    return newProducts.length;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.WRITE, `${path}/bulk-${page}`);
   }
 }
 
