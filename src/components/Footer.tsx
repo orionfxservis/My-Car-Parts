@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 
 type ModalDocType =
+  | 'conditions'
   | 'privacy'
   | 'terms'
   | 'cookies'
@@ -26,6 +27,20 @@ const MODAL_DOCS: Record<
   Exclude<ModalDocType, null>,
   { title: string; subtitle: string; sections: { heading: string; body: string }[] }
 > = {
+  conditions: {
+    title: 'Terms & Conditions',
+    subtitle: 'Last Updated: 26 November 2026',
+    sections: [
+      {
+        heading: '1. Enquiries, Quotations & Order Confirmation',
+        body: 'All spare part prices, lead times, and OEM or aftermarket availability displayed or quoted by My Car Parts are subject to confirmation prior to dispatch. An order becomes binding once mutually confirmed with authorized payment or delivery terms.',
+      },
+      {
+        heading: '2. Fitment Verification & Returns',
+        body: 'Customers are responsible for providing accurate vehicle VIN, generator serial, or machinery model details before dispatch. Uninstalled parts in original packaging qualify for return consideration in accordance with our applicable sales policy.',
+      },
+    ],
+  },
   privacy: {
     title: 'Privacy Policy',
     subtitle: 'Effective November 2026',
@@ -241,8 +256,9 @@ export function Footer({ basePath = '.', compact = false }: FooterProps) {
             {/* Social Links */}
             <div className="pt-1 flex items-center gap-2.5">
               <a
-                href="#social-facebook"
-                onClick={(e) => e.preventDefault()}
+                href="https://www.facebook.com/mycarparts.pk"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="My Car Parts on Facebook"
                 className="inline-flex items-center justify-center w-9 h-9 rounded-md bg-[#181C23] border border-slate-800 text-slate-300 hover:text-amber-400 hover:border-slate-700 transition-colors"
               >
@@ -251,8 +267,9 @@ export function Footer({ basePath = '.', compact = false }: FooterProps) {
                 </svg>
               </a>
               <a
-                href="#social-instagram"
-                onClick={(e) => e.preventDefault()}
+                href="https://www.instagram.com/mycarpartspk/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="My Car Parts on Instagram"
                 className="inline-flex items-center justify-center w-9 h-9 rounded-md bg-[#181C23] border border-slate-800 text-slate-300 hover:text-amber-400 hover:border-slate-700 transition-colors"
               >
@@ -588,49 +605,32 @@ export function Footer({ basePath = '.', compact = false }: FooterProps) {
           </p>
           <div className="flex flex-wrap items-center gap-4">
             <a
-              href={`${basePath}/pages/car-parts.html`}
+              href={`${basePath}/pages/terms-conditionns.html`}
               className="hover:text-amber-400 transition-colors"
             >
-              Car Spare Parts
+              Terms &amp; Conditions
             </a>
             <span aria-hidden="true">·</span>
             <a
-              href={`${basePath}/pages/generator-parts.html`}
+              href={`${basePath}/pages/terms-of-service.html`}
               className="hover:text-amber-400 transition-colors"
-            >
-              Industrial Generator Spare Parts
-            </a>
-            <span aria-hidden="true">·</span>
-            <a
-              href={`${basePath}/pages/heavy-machinery-parts.html`}
-              className="hover:text-amber-400 transition-colors"
-            >
-              Heavy Machinery Parts
-            </a>
-            <span aria-hidden="true">·</span>
-            <button
-              type="button"
-              onClick={() => setActiveDoc('privacy')}
-              className="hover:text-slate-300 transition-colors cursor-pointer"
-            >
-              Privacy Policy
-            </button>
-            <span aria-hidden="true">·</span>
-            <button
-              type="button"
-              onClick={() => setActiveDoc('terms')}
-              className="hover:text-slate-300 transition-colors cursor-pointer"
             >
               Terms of Service
-            </button>
+            </a>
             <span aria-hidden="true">·</span>
-            <button
-              type="button"
-              onClick={() => setActiveDoc('cookies')}
-              className="hover:text-slate-300 transition-colors cursor-pointer"
+            <a
+              href={`${basePath}/pages/cookies-policy.html`}
+              className="hover:text-amber-400 transition-colors"
             >
               Cookies Policy
-            </button>
+            </a>
+            <span aria-hidden="true">·</span>
+            <a
+              href={`${basePath}/pages/privacy-policy.html`}
+              className="hover:text-amber-400 transition-colors"
+            >
+              Privacy Policy
+            </a>
             <span aria-hidden="true">·</span>
             <a
               href={`${basePath}/pages/admin.html`}

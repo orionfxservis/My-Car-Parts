@@ -13,6 +13,7 @@ interface NavbarProps {
   activeCategory?: ToolCategory;
   centerTitle?: string;
   backToMainHref?: string;
+  hideEnquiry?: boolean;
 }
 
 export function Navbar({
@@ -25,6 +26,7 @@ export function Navbar({
   activeCategory,
   centerTitle,
   backToMainHref,
+  hideEnquiry = false,
 }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isSubpage = basePath !== '.';
@@ -138,24 +140,25 @@ export function Navbar({
                   <span>{cartCount > 0 ? `Cart (${cartCount})` : 'Cart'}</span>
                 </button>
               )}
-              {onOpenEnquiry ? (
-                <button
-                  type="button"
-                  onClick={onOpenEnquiry}
-                  className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-                >
-                  <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
-                  <span>Enquiry</span>
-                </button>
-              ) : (
-                <a
-                  href="mailto:sales@mycarparts.pk"
-                  className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap shrink-0"
-                >
-                  <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
-                  <span>Enquiry</span>
-                </a>
-              )}
+              {!hideEnquiry &&
+                (onOpenEnquiry ? (
+                  <button
+                    type="button"
+                    onClick={onOpenEnquiry}
+                    className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                  >
+                    <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+                    <span>Enquiry</span>
+                  </button>
+                ) : (
+                  <a
+                    href="mailto:sales@mycarparts.pk"
+                    className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap shrink-0"
+                  >
+                    <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+                    <span>Enquiry</span>
+                  </a>
+                ))}
               <a
                 href={backToMainHref}
                 className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-md transition-colors whitespace-nowrap shrink-0"
